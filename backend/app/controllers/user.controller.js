@@ -20,6 +20,7 @@ exports.create = (req, res) => {
     NICPP: req.body.nicpp,
     Gender: req.body.gender,
     DOB: req.body.dob,
+    PrimaryContact: req.body.primaryContact,
     MaritalStatus: req.body.MaritalStatus,
     IsVerified: req.body.IsVerified
   };

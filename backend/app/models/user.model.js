@@ -7,6 +7,7 @@ const User = function(user) {
   this.NICPP = user.nicpp;
   this.Gender = user.gender;
   this.DOB = user.dob;
+  this.PrimaryContact = user.primaryContact;
   this.MaritalStatus = user.maritalStatus;
   this.IsVerified = user.isVerfied;
 };

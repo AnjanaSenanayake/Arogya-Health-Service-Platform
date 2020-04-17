@@ -2,6 +2,7 @@ var crypto = require('crypto');
 var uuid = require('uuid');
 const User = require("../models/user.model.js");
 const Profile = require("../models/profile.model.js");
+const MESSAGES = require("../utils/messages.js");
 
 // Register a new user
 exports.register = (req, res) => {
@@ -33,6 +34,7 @@ exports.register = (req, res) => {
     UID: uid,
     Name: req.body.name,
     NICPP: req.body.nicpp,
+    PrimaryContact: req.body.primaryContact
   };
 
   User.findByNICPP(req.body.nicpp, (err, result) => {
@@ -41,27 +43,28 @@ exports.register = (req, res) => {
           // Save new User in the resultbase
           User.create(user, (err, result) => {
             if (err) {
-              res.status(500).send({message:err.message || "Some error occurred while creating the User."});
+              res.status(500).send({message:err.message || MESSAGES.ERROR_WHILE_REGISTERING_USER});
               return;
             }else {
               Profile.createLogin(profile,(err, result) =>{
                   if (err) {
-                    res.status(500).send({message:err.message || "Some error occurred while creating the User Login."});
+                    res.status(500).send({message:err.message || MESSAGES.ERROR_WHILE_REGISTERING_USER});
                     return;
                   }
                   else {
-                    res.send(result)
+                    res.send(MESSAGES.REGISTER_SUCCESS)
                     return;
                   }
               });
             };
           });
       } else {
-        res.status(500).send({message: "Error retrieving user with nicpp " + req.params.nicpp});
+        res.status(500).send({message: MESSAGES.ERROR_RETRV_USER_WITH_NICPP + req.body.nicpp});
         return;
       }
     } else {
-      res.send({message:"User already exists"});
+      res.send(MESSAGES.USER_ALREADY_EXISTS);
+      console.log(MESSAGES.USER_ALREADY_EXISTS);
     }
   });
 };
@@ -81,10 +84,10 @@ exports.login = (req, res) => {
   User.findByNICPP(nicpp, (err, result) => {
     if (err) {
       if (err.kind === "not_found") {
-          res.status(500).send({message:err.message || "User does not exists"});
+          res.status(500).send(MESSAGES.USER_DOES_NOT_EXISTS);
           return;
       } else {
-        res.status(500).send({message: "Error retrieving user data for " + nicpp});
+        res.status(500).send({message: MESSAGES.ERROR_RETRV_USER_WITH_NICPP + nicpp});
         return;
       }
     } else {
@@ -92,10 +95,10 @@ exports.login = (req, res) => {
         Profile.login(result.UID, (err, result) => {
             if(err) {
               if (err.kind === "not_found") {
-                  res.status(500).send({message:err.message || "Profile does not exists"});
+                  res.send(MESSAGES.USER_DOES_NOT_HAVE_LOGIN_ACCOUNT);
                   return;
               } else {
-                res.status(500).send({message: "Error retrieving profile data for " + result.UID});
+                res.status(500).send({message: MESSAGES.ERROR_RETRV_PROFILE_WITH_UID + result.UID});
                 return;
               }
             } else {
@@ -109,10 +112,10 @@ exports.login = (req, res) => {
                 console.log(hashedPassword);
 
                 if (encryptedPassword == hashedPassword) {
-                    res.json('Login is success!');
+                    res.send(MESSAGES.LOGIN_SUCCESS);
                     res.end(JSON.stringify(result));
                 } else {
-                    res.json('Login failed!');
+                    res.json(MESSAGES.INCORRECT_PASSWORD);
                 }
             }
         });
