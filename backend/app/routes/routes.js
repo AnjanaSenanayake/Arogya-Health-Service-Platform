@@ -11,20 +11,21 @@ module.exports = app => {
   app.route('/login')
   .post(Profile.login);
 
-  // // Create a new user
-  // app.route('/create')
-  // .post(User.create);
+  // Update a user with uid
+  app.route('/updateUser')
+  .post(User.update);
 
-  // // Retrieve all users
-  // app.route('/user')
-  // .post(User.findAll);
+  // Create a new user
+  app.route('/createUser')
+  .post(User.create);
 
-  // // Retrieve a single user with nicpp
-  // app.route('/user/:nicpp')
-  // .post(User.findOne);
+  // Retrieve user by NICPP
+  app.route('/getUserByUID')
+  .post(User.findOne);
 
-  // // Update a user with nicpp
-  // app.put("/user/:nicpp", user.update);
+  // Retrieve all child users with pid
+  app.route('/getAllChildUsers')
+  .post(User.getAllChildUsers);
 
   // // Delete a user with nicpp
   // app.delete("/user/:nicpp", user.delete);

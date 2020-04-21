@@ -11,6 +11,11 @@ const ERROR_RETRV_PROFILE_WITH_UID = "Error retrieving profile with uid: ";
 const LOGIN_SUCCESS = "Login success";
 const INCORRECT_PASSWORD = 'Incorrect password';
 
+// Update Messages
+const NOT_FOUND_USER_WITH_NICPP = "Not found User with nicpp: ";
+const ERROR_UPDATING_USER_WITH_NICPP = "Error updating User with nicpp ";
+const UPDATE_SUCCESS = "Update success";
+
 module.exports = {
     ERROR_WHILE_REGISTERING_USER,
     ERROR_RETRV_USER_WITH_NICPP,
@@ -20,5 +25,8 @@ module.exports = {
     USER_DOES_NOT_HAVE_LOGIN_ACCOUNT,
     ERROR_RETRV_PROFILE_WITH_UID,
     LOGIN_SUCCESS,
-    INCORRECT_PASSWORD
+    INCORRECT_PASSWORD,
+    NOT_FOUND_USER_WITH_NICPP,
+    ERROR_UPDATING_USER_WITH_NICPP,
+    UPDATE_SUCCESS
 };

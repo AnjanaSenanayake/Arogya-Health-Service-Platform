@@ -8,6 +8,21 @@ const Profile = function(profile) {
   this.IsAllowed = profile.isAllowed;
 };
 
+Profile.register = (newUser, result) => {
+  console.log(newUser);
+  sql.query("INSERT INTO User SET ?", newUser, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    } else {
+
+      console.log("created user: ", { id: res.insertId, ...newUser });
+      result(null, { id: res.insertId, ...newUser });
+    }
+  });
+};
+
 Profile.createLogin = (newUserProfile, result) => {
   sql.query("INSERT INTO UserProfile SET ?", newUserProfile, (err, res) => {
     if (err) {
@@ -28,9 +43,8 @@ Profile.login = (uid, result) => {
       result(err, null);
       return;
     }
-    console.log("profile exists for: ", uid);
-    result(null, res[0]);
     console.log("profile exists for: ", res[0]);
+    result(null, res[0]);
   });
 };
 

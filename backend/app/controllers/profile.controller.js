@@ -37,11 +37,11 @@ exports.register = (req, res) => {
     PrimaryContact: req.body.primaryContact
   };
 
-  User.findByNICPP(req.body.nicpp, (err, result) => {
+  User.findByUID(req.body.uid, (err, result) => {
     if (err) {
       if (err.kind === "not_found") {
           // Save new User in the resultbase
-          User.create(user, (err, result) => {
+          Profile.register(user, (err, result) => {
             if (err) {
               res.status(500).send({message:err.message || MESSAGES.ERROR_WHILE_REGISTERING_USER});
               return;
@@ -59,7 +59,7 @@ exports.register = (req, res) => {
             };
           });
       } else {
-        res.status(500).send({message: MESSAGES.ERROR_RETRV_USER_WITH_NICPP + req.body.nicpp});
+        res.status(500).send({message: MESSAGES.ERROR_RETRV_USER_WITH_NICPP + req.body.uid});
         return;
       }
     } else {
@@ -84,7 +84,8 @@ exports.login = (req, res) => {
   User.findByNICPP(nicpp, (err, result) => {
     if (err) {
       if (err.kind === "not_found") {
-          res.status(500).send(MESSAGES.USER_DOES_NOT_EXISTS);
+          res.send(MESSAGES.USER_DOES_NOT_EXISTS);
+          console.log(MESSAGES.USER_DOES_NOT_EXISTS)
           return;
       } else {
         res.status(500).send({message: MESSAGES.ERROR_RETRV_USER_WITH_NICPP + nicpp});
@@ -96,9 +97,11 @@ exports.login = (req, res) => {
             if(err) {
               if (err.kind === "not_found") {
                   res.send(MESSAGES.USER_DOES_NOT_HAVE_LOGIN_ACCOUNT);
+                  console.log(MESSAGES.USER_DOES_NOT_HAVE_LOGIN_ACCOUNT)
                   return;
               } else {
                 res.status(500).send({message: MESSAGES.ERROR_RETRV_PROFILE_WITH_UID + result.UID});
+                console.log(MESSAGES.ERROR_RETRV_PROFILE_WITH_UID + result.UID)
                 return;
               }
             } else {
@@ -109,13 +112,18 @@ exports.login = (req, res) => {
                 hash.update(plainPassword);
                 var value = hash.digest('hex');
                 var hashedPassword = value;
-                console.log(hashedPassword);
+                
+                console.log(hashedPassword)
+                console.log(encryptedPassword)
 
                 if (encryptedPassword == hashedPassword) {
-                    res.send(MESSAGES.LOGIN_SUCCESS);
-                    res.end(JSON.stringify(result));
+                    res.send(result);
+                    console.log(MESSAGES.LOGIN_SUCCESS)
+                    return;
                 } else {
-                    res.json(MESSAGES.INCORRECT_PASSWORD);
+                    res.send(MESSAGES.INCORRECT_PASSWORD);
+                    console.log(MESSAGES.INCORRECT_PASSWORD)
+                    return;
                 }
             }
         });
