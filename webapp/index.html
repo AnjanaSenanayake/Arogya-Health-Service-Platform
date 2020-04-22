@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vue Test</title>
+
+    <!-- This is a development version of Vue.js! -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- import stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Google fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Basic usage -->
+
+    <div id="app" v-bind:title="timestamp" class="experiment-block">
+      <form action="/action_page.php">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Your name.."
+          v-model="name"
+        />
+
+        <label for="nic">NIC number</label>
+        <input
+          type="text"
+          id="nic"
+          name="nic"
+          placeholder="NIC number"
+          v-model="nic"
+        />
+
+        <label for="position">Position</label>
+        <input
+          type="text"
+          id="position"
+          name="position"
+          placeholder="Position"
+          v-model="position"
+        />
+
+        <label for="phone">Phone number</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          placeholder="Phone number"
+          v-model="phone"
+        />
+
+        <label for="access-level">Access</label>
+        <select id="access-level" name="access-level" v-model="selection">
+          <option value="0">Full Access</option>
+          <option value="1">Divisional Secreterite Access</option>
+          <option value="2">Grama Niladhari Access</option>
+        </select>
+
+        <label for="ds-division">DS Division</label>
+        <input
+          type="text"
+          id="dsdivision"
+          name="dsdivision"
+          placeholder="DS division"
+          v-model="dsdivision"
+          :disabled="selection == 0"
+        />
+
+        <label for="gndivision">GS Division</label>
+        <input
+          type="text"
+          id="gndivision"
+          name="gndivision"
+          placeholder="GN division"
+          v-model="gndivision"
+          :disabled="selection != 2"
+        />
+
+        <label for="password">Password </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          minlength="8"
+          required=""
+          v-model="password"
+        />
+
+        <label for="confirmpassword">Confirm Password </label>
+        <input
+          type="password"
+          id="confirmpassword"
+          name="confirmpassword"
+          minlength="8"
+          required=""
+          v-model="confirmpassword"
+        />
+
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data: function () {
+          return {
+            name: "",
+            email: "",
+            position: "",
+            phone: "",
+            selection: "0",
+            dsdivision: "ds-division",
+            gndivision: "gndivision",
+            password: "password",
+            confirmpassword:"confirmpassword"
+          };
+        },
+      });
+    </script>
+  </body>
+</html>
