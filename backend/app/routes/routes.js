@@ -1,5 +1,6 @@
 var User = require("../controllers/user.controller.js");
-var Profile = require("../controllers/profile.controller.js");
+var Profile = require("../controllers/user.profile.controller.js");
+var AdminProfile = require("../controllers/admin.profile.controller.js");
 
 module.exports = app => {
 
@@ -26,6 +27,12 @@ module.exports = app => {
   // Retrieve all child users with pid
   app.route('/getAllChildUsers')
   .post(User.getAllChildUsers);
+
+  app.route('/adminRegister')
+  .post(AdminProfile.register);
+
+  app.route('/adminLogin')
+  .post(AdminProfile.login);
 
   // // Delete a user with nicpp
   // app.delete("/user/:nicpp", user.delete);

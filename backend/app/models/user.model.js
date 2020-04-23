@@ -87,9 +87,14 @@ User.findByNICPP = (nicpp, result) => {
       console.log("error: ", err);
       result(err, null);
       return;
-    } else {
-      result(null,res[0])
-    }
+    } else if (res.length) {
+      console.log("found an user: ", res[0]);
+      result(null, res[0]);
+      return;
+  } else{
+    // not found user with the nicpp
+    result({ kind: "not_found" }, null);
+  }
   })
 };
 
