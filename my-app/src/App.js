@@ -3,7 +3,12 @@ import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Button, Row, Col, Container, Form,Input } from 'react-bootstrap';
+import { Button, Row, Col, Container, Form, Input } from 'react-bootstrap';
+import { loginRequest } from './Methods/authMethod'
+import { WebApp } from './Screens/HomeScreen'
+
+
+
 function App() {
 
   const [loginStates, setloginStates] = React.useState(null);
@@ -15,35 +20,41 @@ function App() {
         </header>
       </div>
     );
-  } else {
+  } else if (loginStates == false) {
     return (
       <div className="App">
         <header className="App-header" >
-
+          <p>NIC or Password doesn't match</p>
+          <Button onClick={()=>{setloginStates(true)}}>Back</Button>
         </header>
       </div>
+    )
+  } else if (loginStates) {
+    return (
+      <WebApp loginStates={loginStates}></WebApp>
     );
   }
 
 }
 
 
-function LoginForm() {
+function LoginForm(props) {
 
   const [nic, setNic] = React.useState('');
   const [pw, setPw] = React.useState('');
 
-  function handleNic(e){
+  function handleNic(e) {
     setNic(e.target.value);
 
   }
-  function handlePw(e){
+  function handlePw(e) {
     setPw(e.target.value);
   }
 
   function login(e) {
     console.log(nic);
     console.log(pw);
+    loginRequest(nic, pw,props.setloginStates);
   }
 
   return (
@@ -56,7 +67,7 @@ function LoginForm() {
       </Row>
       <Row>
         <Col>
-        -
+          -
         </Col>
       </Row>
       <Row>
@@ -69,7 +80,7 @@ function LoginForm() {
         <Col xs={6}> <Button type='button' onClick={login}>Login</Button></Col>
         <Col></Col>
       </Row>
-      
+
     </Container>
     // <Container className="align-self-center">
     //   <Row>
