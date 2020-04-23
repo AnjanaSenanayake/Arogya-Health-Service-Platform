@@ -13,6 +13,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Button, Row, Col, Container, Form, Input } from 'react-bootstrap';
 export function WebApp(props) {
+
+    const [navTitle, setNavTitle] = React.useState();
+
     return (
         <Router>
             <div>
@@ -23,7 +26,7 @@ export function WebApp(props) {
                             <img src="http://placehold.it/150x50?text=Logo" alt=""></img>
                         </a>
                         <a>
-
+                            {navTitle}
                         </a>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
@@ -51,24 +54,27 @@ export function WebApp(props) {
                         </div>
                     </div>
                 </nav>
+
                 <Switch>
                     <Route path="/about">
-                        <About />
+                        <About setNavTitle = {setNavTitle}/>
                     </Route>
-                    <Route path="/users">
-                        <Users />
+                    <Route  path="/users">
+                        <Users setNavTitle = {setNavTitle} />
                     </Route>
                     <Route path="/">
-                        <Home />
+                        <Home setNavTitle = {setNavTitle} />
                     </Route>
                 </Switch>
+
             </div>
         </Router>
     );
 }
 
 
-function Home() {
+function Home(props) {
+    props.setNavTitle('Home')
     return (
         <div>
 
@@ -84,7 +90,8 @@ function Home() {
     )
 }
 
-function About() {
+function About(props) {
+    props.setNavTitle('About')
     return (
         <div>
 
@@ -100,11 +107,18 @@ function About() {
     )
 }
 
-function Users() {
+function Users(props) {
+
+    function print() {
+       console.log(props)
+     }
+     props.setNavTitle('User')
+
     return (
         <div>
             <div className="container">
                 <h1 className="mt-4">User Management Screen</h1>
+                <Button onClick={print}></Button>
                 <p>The logo in the navbar is now a default Bootstrap feature in Bootstrap 4! Make sure to set the width and height of the logo within the HTML or with CSS. For best results, use an SVG image as your logo.</p>
             </div>
 
