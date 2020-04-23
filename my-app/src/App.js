@@ -10,13 +10,14 @@ import { WebApp } from './Screens/HomeScreen'
 
 
 function App() {
-
+  const [userData, setUserData] = React.useState(null);
   const [loginStates, setloginStates] = React.useState(null);
+
   if (loginStates == null) {
     return (
       <div className="App">
         <header className="App-header" >
-          <LoginForm setloginStates={setloginStates}></LoginForm>
+          <LoginForm setloginStates={setloginStates} setUserData={setUserData}></LoginForm>
         </header>
       </div>
     );
@@ -25,13 +26,13 @@ function App() {
       <div className="App">
         <header className="App-header" >
           <p>NIC or Password doesn't match</p>
-          <Button onClick={()=>{setloginStates(true)}}>Back</Button>
+          <Button onClick={()=>{setloginStates(null)}}>Back</Button>
         </header>
       </div>
     )
   } else if (loginStates) {
     return (
-      <WebApp loginStates={loginStates}></WebApp>
+      <WebApp loginStates={loginStates} setUserData = {userData}></WebApp>
     );
   }
 
@@ -54,7 +55,7 @@ function LoginForm(props) {
   function login(e) {
     console.log(nic);
     console.log(pw);
-    loginRequest(nic, pw,props.setloginStates);
+    loginRequest(nic, pw,props.setloginStates,props.setUserData);
   }
 
   return (
@@ -82,40 +83,6 @@ function LoginForm(props) {
       </Row>
 
     </Container>
-    // <Container className="align-self-center">
-    //   <Row>
-    //     <Col ></Col>
-
-    //     <Col xs={4}>
-    //       <img src={logo} className="App-logo" alt="logo" />
-    //       <div>
-    //         <input type='text'></input>
-    //         <input type='text'></input>
-
-    //       </div>
-    //       {/* <Form onSubmit={(e) => login(e)}>
-    //         <img src={logo} className="App-logo" alt="logo" />
-    //         <Form.Group controlId="formBasicEmail">
-
-    //           <Form.Control type="text" placeholder="Enter NIC" />
-    //           <Form.Text className="text-muted">
-    //             We'll never share your infomation with anyone else.
-    //         </Form.Text>
-    //         </Form.Group>
-
-    //         <Form.Group controlId="formBasicPassword">
-
-    //           <Form.Control type="password" placeholder="Password"/>
-    //         </Form.Group>
-
-    //         <Button variant="primary" type="submit">
-    //           Login
-    //         </Button>
-    //       </Form> */}
-    //     </Col>
-    //     <Col></Col>
-    //   </Row>
-    // </Container>
   )
 }
 
