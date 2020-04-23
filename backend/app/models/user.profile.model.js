@@ -8,6 +8,7 @@ const Profile = function(profile) {
   this.IsAllowed = profile.isAllowed;
 };
 
+//////////////////////////////////////////////User Profile Models/////////////////////////////////////////////////////////////
 Profile.register = (newUser, result) => {
   console.log(newUser);
   sql.query("INSERT INTO User SET ?", newUser, (err, res) => {

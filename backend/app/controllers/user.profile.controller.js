@@ -1,8 +1,10 @@
 var crypto = require('crypto');
 var uuid = require('uuid');
 const User = require("../models/user.model.js");
-const Profile = require("../models/profile.model.js");
+const Profile = require("../models/user.profile.model.js");
 const MESSAGES = require("../utils/messages.js");
+
+//////////////////////////////////////////////User Controller//////////////////////////////////////////////////////////////
 
 // Register a new user
 exports.register = (req, res) => {

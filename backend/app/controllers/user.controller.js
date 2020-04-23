@@ -1,7 +1,7 @@
 var crypto = require('crypto');
 var uuid = require('uuid');
 const User = require("../models/user.model.js");
-const UserLogin = require("../models/profile.model.js");
+const UserLogin = require("../models/user.profile.model.js");
 const MESSAGES = require("../utils/messages.js");
 
 // Create and Save a new user
@@ -74,7 +74,7 @@ exports.findAll = (req, res) => {
   });
 };
 
-// Find a single User with a nicpp
+// Find a single User with a uid
 exports.findOne = (req, res) => {
   User.findByUID(req.body.uid, (err, result) => {
     if (err) {
@@ -219,31 +219,3 @@ exports.deleteAll = (req, res) => {
     else res.send({ message: `All users were deleted successfully!` });
   });
 };
-
-//Password util
-var genRandomString = function (length) {
-    return crypto.randomBytes(Math.ceil(length / 2))
-        .toString('hex')
-        .slice(0, length);
-}
-
-var sha512 = function (password, salt) {
-    var hash = crypto.createHmac('sha512', salt);
-    hash.update(password);
-    var value = hash.digest('hex');
-    return {
-        salt: salt,
-        passwordHash: value
-    };
-};
-
-function saltHashPassword(userPassword) {
-    var salt = genRandomString(16);
-    var passwordData = sha512(userPassword, salt);
-    return passwordData;
-}
-
-function checkHashPassword(userPassword, salt) {
-    var passwordData = sha512(userPassword, salt);
-    return passwordData;
-}
