@@ -1,5 +1,5 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import logo from './img/sl.png';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,16 +12,19 @@ import { WebApp } from './Screens/HomeScreen'
 function App() {
   const [userData, setUserData] = React.useState(null);
   const [loginStates, setloginStates] = React.useState(null);
+  let taken;
+  useEffect(() => {
+    const token =  localStorage.getItem('token')
+    console.log("Token", token)
+    setloginStates(token !== "null")
+  }, [])
 
-  if (loginStates == null) {
+
+  if (loginStates ) {
     return (
-      <div className="App">
-        <header className="App-header" >
-          <LoginForm setloginStates={setloginStates} setUserData={setUserData}></LoginForm>
-        </header>
-      </div>
+      <WebApp  setloginStates = {setloginStates} loginStates={loginStates} setUserData = {userData}></WebApp>
     );
-  } else if (loginStates == false) {
+  } else if (loginStates == false && taken != null) {
     return (
       <div className="App">
         <header className="App-header" >
@@ -30,14 +33,16 @@ function App() {
         </header>
       </div>
     )
-  } else if (loginStates) {
+  } else {
     return (
-      <WebApp loginStates={loginStates} setUserData = {userData}></WebApp>
+      <div className="App">
+        <header className="App-header" >
+          <LoginForm setloginStates={setloginStates} setUserData={setUserData}></LoginForm>
+        </header>
+      </div>
     );
   }
-
 }
-
 
 function LoginForm(props) {
 
@@ -58,9 +63,17 @@ function LoginForm(props) {
     loginRequest(nic, pw,props.setloginStates,props.setUserData);
   }
 
+
+
   return (
     <Container className='container'>
       <img src={logo} className="App-logo" alt="logo" />
+      <Row>
+      <Col className="font-weight-light">
+          -
+      </Col>
+      </Row>
+
       <Row>
         <Col></Col>
         <Col xs={6}> <input type='text' placeholder='NIC' className="form-control" onChange={handleNic} value={nic}></input></Col>
