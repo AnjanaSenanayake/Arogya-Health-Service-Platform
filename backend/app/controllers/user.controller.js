@@ -2,6 +2,7 @@ var crypto = require('crypto');
 var uuid = require('uuid');
 const User = require("../models/user.model.js");
 const UserLogin = require("../models/user.profile.model.js");
+const InfectedPatients = require("../models/infected.patients.model.js");
 const MESSAGES = require("../utils/messages.js");
 
 // Create and Save a new user
@@ -64,7 +65,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   User.getAll((err, result) => {
     if (err) {
-      res.status(500).send({message:err.message || "Some error occurred while retrieving customers."});
+      res.status(500).send({message:err.message || "Some error occurred while retrieving users."});
       return;
     }
     else {
@@ -163,8 +164,8 @@ exports.getAllChildUsers = (req,res) => {
   });
 }
 
-// Validate an User identified by the nicpp in the request
-exports.validateUser = (req, res) => {
+// Alert for infection
+exports.insertPatient = (req,res) => {
   // Validate Request
   if (!req.body) {
     res.status(400).send({
@@ -172,24 +173,14 @@ exports.validateUser = (req, res) => {
     });
   }
 
-  console.log(req.body);
+  var newPatient = new InfectedPatients(req.body)
 
-  User.validateUser(req.params.nicpp,req.params.validated,
-    (err, result) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found User with nicpp ${req.params.nicpp}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating User with nicpp " + req.params.nicpp
-          });
-        }
-      } else res.send(result);
-    }
-  );
-};
+  InfectedPatients.insertPatient(newPatient, (err,result) => {
+    if (err) {
+      res.status(500).send({message: `Error while inserting new patient ${newPatient}.`});
+    } else res.send(result);
+  });
+}
 
 // Delete an User with the specified nicpp in the request
 exports.delete = (req, res) => {
