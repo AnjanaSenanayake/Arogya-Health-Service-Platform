@@ -3,6 +3,25 @@ import React from 'react';
 export function getIp(){
     return 'http://localhost:7800/'
   }
+
+
+export function getUserInfo(){
+
+  const token = localStorage.getItem('token');
+
+//@anjana create backend to get user infomation to figure out the access levels and name and etc
+  return null;
+
+}
+
+
+//  Return info regarding patiants
+export function getPatiantInfo({name = null , nic=null, age=null}){
+
+}
+
+
+
 export function logout(setLoginStates){
     setLoginStates(null)
     localStorage.setItem('token', null);
@@ -82,4 +101,22 @@ export async  function registerRequest(name,nic,posi,phone,access,ds,gs,pw){
       })
 }
 
-
+// Template for auth request
+export async function authRequest(url='',requestBody={}){
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
+  const qs = require('querystring');
+  axios.post(getIp()+ url, qs.stringify(requestBody), config)
+      .then((result) => {
+     
+          console.log(result)
+      
+      })
+      .catch((err) => {
+        console.log(err)
+        //setloginStates(false);
+      })
+}
