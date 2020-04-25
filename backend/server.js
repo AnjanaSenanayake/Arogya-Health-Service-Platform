@@ -7,6 +7,10 @@ app.use(bodyParser.urlencoded({
     extended: true //Accept URL encoded params
 }));
 
+var cors = require('cors')
+
+app.use(cors()) 
+
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Arogya..." });
