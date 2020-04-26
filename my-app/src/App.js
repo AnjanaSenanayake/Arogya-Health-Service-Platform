@@ -3,21 +3,43 @@ import logo from "./img/sl.png";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { Button, Row, Col, Container, Form, Input } from "react-bootstrap";
+import { Button, Row, Col, Container, Form, Input,Modal } from "react-bootstrap";
 import { loginRequest } from "./Methods/authMethod";
 import { WebApp } from "./Screens/HomeScreen";
 
 function App() {
   const [userData, setUserData] = React.useState(null);
   const [loginStates, setloginStates] = React.useState(null);
-  let taken;
+  const [failedMsg, setFailedMsg] = React.useState('Something went wrong :(');
+  let token;
+
   useEffect(() => {
     const token = localStorage.getItem("token");
+    // console.log(,token)
+    if(token != 'null'){
+      setloginStates(true)
+    }
     console.log("Token", token);
-    setloginStates(token !== "null");
+    // setloginStates(token !== "null");
   }, []);
 
-  if (loginStates) {
+ 
+  if (loginStates == null) {
+    console.log('state',loginStates)
+    //login
+    return (
+      <div className="App">
+        <header className="App-header">
+          <LoginForm
+            setFailedMsg={setFailedMsg}
+            setloginStates={setloginStates}
+            setUserData={setUserData}
+          ></LoginForm>
+        </header>
+      </div>
+    )
+  } if (loginStates == true) {
+    //loged
     return (
       <WebApp
         setloginStates={setloginStates}
@@ -25,11 +47,12 @@ function App() {
         setUserData={userData}
       ></WebApp>
     );
-  } else if (loginStates == false && taken != null) {
+  } else {
+    //error
     return (
       <div className="App">
         <header className="App-header">
-          <p>NIC or Password doesn't match</p>
+          <p>{failedMsg}</p>
           <Button
             onClick={() => {
               setloginStates(null);
@@ -40,24 +63,14 @@ function App() {
         </header>
       </div>
     );
-  } else {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <LoginForm
-            setloginStates={setloginStates}
-            setUserData={setUserData}
-          ></LoginForm>
-        </header>
-      </div>
-    );
   }
 }
 
 function LoginForm(props) {
   const [nic, setNic] = React.useState("");
   const [pw, setPw] = React.useState("");
-
+  const [smShow,setSmShow] = React.useState(false);
+  const [msg,setMsg] = React.useState("");
   function handleNic(e) {
     setNic(e.target.value);
   }
@@ -68,23 +81,28 @@ function LoginForm(props) {
   function login(e) {
     console.log(nic);
     console.log(pw);
-    loginRequest(nic, pw, props.setloginStates, props.setUserData);
+    if( nic ==='' || pw ===''){
+      setMsg('Password and NIC can not be emty.')
+      setSmShow(true)
+    }else{
+      loginRequest(nic, pw, props.setloginStates, props.setUserData, props.setFailedMsg);
+    }
   }
 
   return (
     <Container className="container">
       <img src={logo} className="App-logo" alt="logo" />
-      <Row>
-        <Col className="font-weight-light">-</Col>
+      <Row className="row">
+        <Col className="font-weight-light"><h2>{'Welcome to Arogya'}</h2></Col>
       </Row>
-
-      <Row>
+      <br></br>
+      <Row className="row">
         <Col></Col>
-        <Col xs={6}>
-          {" "}
+        <Col xs={4} className="font-weight-light">
+          {"National ID Card number"}
           <input
             type="text"
-            placeholder="NIC"
+            placeholder="987654321V"
             className="form-control"
             onChange={handleNic}
             value={nic}
@@ -92,16 +110,16 @@ function LoginForm(props) {
         </Col>
         <Col></Col>
       </Row>
-      <Row>
-        <Col>-</Col>
-      </Row>
-      <Row>
+      <Row className="row">
         <Col></Col>
-        <Col xs={6}>
-          {" "}
+      </Row>
+      <Row className="row">
+        <Col></Col>
+        <Col xs={4} className="font-weight-light">
+          {"Password"}
           <input
             type="password"
-            placeholder="Password"
+            placeholder="P@R5W0r6"
             className="form-control"
             onChange={handlePw}
             value={pw}
@@ -109,16 +127,44 @@ function LoginForm(props) {
         </Col>
         <Col></Col>
       </Row>
-      <Row>
+      <br></br>
+      <Row className="row">
         <Col></Col>
-        <Col xs={6}>
-          {" "}
-          <Button type="button" onClick={login}>
-            Login
+        <Col xs={6} className="font-weight-light">
+         
+          <Button type="button"  variant="outline-success" onClick={login}>
+            Enter 
+          </Button>
+          
+        </Col>
+        <Col>
+       
+        </Col>
+      </Row>
+      <br></br>
+      <br></br>
+      <Row>
+        <Col>
+        <Button type="button" size="sm" variant="outline-secondary" onClick={login}>
+            Help me!! 
           </Button>
         </Col>
-        <Col></Col>
       </Row>
+
+      <Modal
+            size="sm"
+            show={smShow}
+            onHide={() => setSmShow(false)}
+            aria-labelledby="example-modal-sizes-title-sm"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-sm">
+                Login Error
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{msg}</Modal.Body>
+          </Modal>
+
     </Container>
   );
 }

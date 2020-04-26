@@ -27,7 +27,7 @@ export function logout(setLoginStates){
     localStorage.setItem('token', null);
 }
 
-export async  function loginRequest(nic,pw,setloginStates,setUserData){
+export async  function loginRequest(nic,pw,setloginStates,setUserData,setFailedMsg){
     console.log(nic+' '+pw)
     const qs = require('querystring');
     const url = getIp()+'adminLogin';
@@ -48,15 +48,19 @@ export async  function loginRequest(nic,pw,setloginStates,setUserData){
             console.log(result)
             if(result.data.PasswordHash != null){
                 localStorage.setItem('token', result.data);
-                console.log(result.data)
+                console.log('login succeed',result.data)
                 setUserData(result.data)
                 setloginStates(true)
             }else{
+              console.log(localStorage.getItem('token'));
+                console.log('login Error',result.data)
+                setFailedMsg(result.data);
                 setloginStates(false);
             }
         })
         .catch((err) => {
           console.log(err)
+          setFailedMsg('Password in correct');
           setloginStates(false);
         })
 }
