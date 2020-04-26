@@ -71,6 +71,7 @@ function LoginForm(props) {
   const [pw, setPw] = React.useState("");
   const [smShow,setSmShow] = React.useState(false);
   const [msg,setMsg] = React.useState("");
+  const [help,setHelp] = React.useState(false);
   function handleNic(e) {
     setNic(e.target.value);
   }
@@ -132,7 +133,7 @@ function LoginForm(props) {
         <Col></Col>
         <Col xs={6} className="font-weight-light">
          
-          <Button type="button"  variant="outline-success" onClick={login}>
+          <Button type="button"  size="lg" variant="outline-success" onClick={login}>
             Enter 
           </Button>
           
@@ -145,14 +146,14 @@ function LoginForm(props) {
       <br></br>
       <Row>
         <Col>
-        <Button type="button" size="sm" variant="outline-secondary" onClick={login}>
+        <Button type="button" size="sm" variant="outline-secondary" onClick={()=>{setHelp(true)}}>
             Help me!! 
           </Button>
         </Col>
       </Row>
 
       <Modal
-            size="sm"
+            size="md"
             show={smShow}
             onHide={() => setSmShow(false)}
             aria-labelledby="example-modal-sizes-title-sm"
@@ -163,6 +164,20 @@ function LoginForm(props) {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>{msg}</Modal.Body>
+          </Modal>
+
+          <Modal
+           
+            show={help}
+            onHide={() => setHelp(false)}
+            // aria-labelledby="example-modal-sizes-title-sm"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-md">
+                You are in Admin / Management web of qwert qwrr
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Insert your login infomation, for reset your password. please contact your organization Admin</Modal.Body>
           </Modal>
 
     </Container>

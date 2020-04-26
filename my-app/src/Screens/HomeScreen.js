@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { registerRequest } from "../Methods/authMethod";
 import { logout } from "../Methods/authMethod";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {SignUp} from "./SignUp"
+import { SignUp } from "./SignUp"
 
 import {
   Button,
@@ -19,43 +19,53 @@ export function WebApp(props) {
   const [navTitle, setNavTitle] = React.useState();
   function logoutHandle() {
     logout(props.setloginStates);
+
   }
   return (
     <Router>
       <div>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-          <div className="container">
+        <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark static-top">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div className="container collapse navbar-collapse" id="navbarSupportedContent">
             <a className="navbar-brand" href="#">
               <img src={logo} className="App-logo" alt="logo" />
             </a>
-            <a>{navTitle}</a>
-            <Button className="nav-item" onClick={logoutHandle}>
-              Logout
-            </Button>
+            {/* <h1>{navTitle}</h1> */}
+            <a className="navbar-brand" href="#"><h2>{navTitle}</h2></a>
+
             <div className="collapse navbar-collapse" id="navbarResponsive">
-              <ul className="navbar-nav ml-auto">
+              <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/users">
+                  <Link className={navTitle == 'User' ? "nav-link h5" : "nav-link"} to="/users">
                     Users
-                  </Link>
+                </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" to="/about">
+
+                  <Link className={navTitle == 'About' ? "nav-link h5" : "nav-link"} to="/about">
                     About
-                  </Link>
+                </Link>
+
+
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/">
+                  <Link className={navTitle == 'Home' ? "nav-link h5" : "nav-link"} to="/">
                     Home
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/signup">
+                  <Link className={navTitle == 'SignUp' ? "nav-link h5" : "nav-link"} to="/signup">
                     Sign Up
                   </Link>
                 </li>
               </ul>
+
+              <Button size="sm" variant="outline-secondary" className="nav-item" onClick={logoutHandle}>
+                Sign Out
+              </Button>
             </div>
           </div>
         </nav>
