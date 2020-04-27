@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 export function getIp(){
-    return 'http://localhost:7800/'
+    return 'https://arogyawebapp.herokuapp.com/'
   }
 
 
