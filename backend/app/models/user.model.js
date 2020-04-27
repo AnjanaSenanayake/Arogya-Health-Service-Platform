@@ -189,6 +189,57 @@ User.getAll = result => {
   });
 };
 
+User.getAllByGNID = (GNID, result) => {
+  sql.query("SELECT * FROM UserResidentialData WHERE GNDivision=?", [GNID], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    } else if (res.length) {
+      var user = {
+        UID: res[0].UID,
+        AddressLine1: res[0].AddressLine1,
+        AddressLine2: res[0].AddressLine2,
+        AddressLine3: res[0].AddressLine3,
+        AddressLine4: res[0].AddressLine4,
+        GNDivision: res[0].GNDivision,
+        DSDivision: res[0].DSDivision
+      }
+      sql.query("SELECT * FROM User WHERE UID=?", [user.UID], (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          // not found user with the UID
+          result({ kind: "not_found" }, null);
+          return;
+        }else if (res.length) {
+          user.PID = res[0].PID;
+          user.Name = res[0].Name;
+          user.NICPP = res[0].NICPP;
+          user.PrimaryContact = res[0].PrimaryContact;
+          user.DOB = res[0].DOB;
+          user.Gender = res[0].Gender;
+          user.MaritalStatus = res[0].MaritalStatus;
+          user.IsVerified = res[0].IsVerified;
+
+          sql.query("SELECT * FROM UserContactData WHERE UID=?", [user.UID], (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+            } else if(res.length) {
+              user.SecondaryContact1 = res[0].SecondaryContact1;
+              user.SecondaryContact2 = res[0].SecondaryContact2;
+              user.EmergencyContact = res[0].EmergencyContact;
+              user.EmergencyContactRelation = res[0].EmergencyContactRelation;
+            }
+          });
+        }
+      });
+    }      
+    console.log("found user: ", user);
+    result(null, user);
+    return;
+  });
+};
+
 User.update = (uid, user, result) => {
   sql.query(
     "UPDATE User SET Name = ?, PrimaryContact = ?, Gender = ?, DOB = ?, MaritalStatus = ?, IsVerified = ? WHERE UID = ?",[user.Name, user.PrimaryContact, user.Gender, user.DOB, user.MaritalStatus, false, uid], (err, res) => {

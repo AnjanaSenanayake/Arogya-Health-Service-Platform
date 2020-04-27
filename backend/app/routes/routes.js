@@ -29,6 +29,10 @@ module.exports = app => {
   app.route('/getAllChildUsers')
   .post(User.getAllChildUsers);
 
+  // Retrieve users with GNID  
+  app.route('/getUsersByGNID')
+  .post(User.getUsersByGNID);
+
   app.route('/adminRegister')
   .post(AdminProfile.register);
 

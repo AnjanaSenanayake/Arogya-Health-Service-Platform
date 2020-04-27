@@ -75,6 +75,19 @@ exports.findAll = (req, res) => {
   });
 };
 
+// Retrieve Users by GNID from the resultbase.
+exports.getUsersByGNID = (req,res) => {
+  User.getAllByGNID(req.GNID, (err, result) => {
+    if(err) {
+      res.status(500).send({message:err.message || "Some error occurred while retrieving users."});
+      return;
+    } else {
+      res.send(result);
+      return;
+    }
+  });
+};
+
 // Find a single User with a uid
 exports.findOne = (req, res) => {
   User.findByUID(req.body.uid, (err, result) => {
