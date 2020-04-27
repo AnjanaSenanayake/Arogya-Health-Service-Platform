@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var uuid = require('uuid');
 const User = require("../models/user.model.js");
 const UserLogin = require("../models/user.profile.model.js");
-const InfectedPatients = require("../models/infected.patients.model.js");
+const EpidemicAlerts = require("../models/epidemic.alerts.model.js");
 const MESSAGES = require("../utils/messages.js");
 
 // Create and Save a new user
@@ -164,8 +164,8 @@ exports.getAllChildUsers = (req,res) => {
   });
 }
 
-// Alert for infection
-exports.insertPatient = (req,res) => {
+// Alert for epidemic
+exports.createEpidemicAlert = (req,res) => {
   // Validate Request
   if (!req.body) {
     res.status(400).send({
@@ -173,11 +173,11 @@ exports.insertPatient = (req,res) => {
     });
   }
 
-  var newPatient = new InfectedPatients(req.body)
+  var newAlert = new EpidemicAlerts(req.body)
 
-  InfectedPatients.insertPatient(newPatient, (err,result) => {
+  EpidemicAlerts.createEpidemicAlert(newAlert, (err,result) => {
     if (err) {
-      res.status(500).send({message: `Error while inserting new patient ${newPatient}.`});
+      res.status(500).send({message: `Error while inserting new patient ${newAlert}.`});
     } else res.send(result);
   });
 }

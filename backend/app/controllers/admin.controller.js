@@ -1,12 +1,33 @@
-const Infections = require("../models/infections.model.js");
+const Epidemics = require("../models/epidemics.model.js");
+const EpidemicAlerts = require("../models/epidemic.alerts.model.js");
 const Districts = require("../models/districts.model.js");
 const DivisionalSectretariats = require("../models/ds.model.js");
 const GNDivisions = require("../models/gn.model.js");
 const MESSAGES = require("../utils/messages.js");
 
-// Retrieve all Infections from the resultbase.
-exports.getAllInfections = (req, res) => {
-    Infections.getAll((err, result) => {
+// Insert a new epidemic
+exports.insertEpidemic = (req,res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  console.log(req.body);
+
+  var newEpidemic = new Epidemics(req.body);
+
+  Epidemics.insertEpidemic(newEpidemic, (err,result) => {
+    if (err) {
+      res.status(500).send({message: `Error while inserting new epidemic ${newEpidemic}.`});
+    } else res.send(result);
+  });
+}
+
+// Retrieve all Epidemics from the resultbase.
+exports.getAllEpidemics = (req, res) => {
+    Epidemics.getAll((err, result) => {
       if (err) {
         res.status(500).send({message:err.message || "Some error occurred while retrieving infections"});
         return;
@@ -18,7 +39,7 @@ exports.getAllInfections = (req, res) => {
     });
 };
 
-// Validate an User identified by the nicpp in the request
+// Validate an User identified by the uid in the request
 exports.validateUser = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -29,16 +50,16 @@ exports.validateUser = (req, res) => {
   
     console.log(req.body);
   
-    User.validateUser(req.params.nicpp,req.params.validated,
+    User.validateUser(req.body.uid,req.body.validated,
       (err, result) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found User with nicpp ${req.params.nicpp}.`
+              message: `Not found User with uid ${req.body.uid}.`
             });
           } else {
             res.status(500).send({
-              message: "Error updating User with nicpp " + req.params.nicpp
+              message: "Error updating User with uid " + req.body.uid
             });
           }
         } else res.send(result);

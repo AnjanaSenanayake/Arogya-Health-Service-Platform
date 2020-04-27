@@ -35,11 +35,14 @@ module.exports = app => {
   app.route('/adminLogin')
   .post(AdminProfile.login);
 
-  app.route('/getAllInfections')
-  .post(Admin.getAllInfections);
+  app.route('/InsertEpidemic')
+  .post(Admin.insertEpidemic);
 
-  app.route('/insertPatient')
-  .post(User.insertPatient);
+  app.route('/getAllEpidemics')
+  .post(Admin.getAllEpidemics);
+
+  app.route('/createEpidemicAlert')
+  .post(User.createEpidemicAlert);
 
   app.route('/getAllDistricts')
   .post(Admin.getAllDistricts);
