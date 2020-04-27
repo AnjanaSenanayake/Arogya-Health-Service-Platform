@@ -317,10 +317,10 @@ User.update = (uid, user, result) => {
   );
 };
 
-User.validateUser = (nicpp, isValidated, result) => {
+User.validateUser = (uid, isValidated, result) => {
   sql.query(
-    "UPDATE User SET IsValidated = ? WHERE NICPP = ?",
-    [isValidated, nicpp],
+    "UPDATE User SET IsValidated = ? WHERE UID = ?",
+    [isValidated, uid],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -329,13 +329,13 @@ User.validateUser = (nicpp, isValidated, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found User with the id
+        // not found User with the uid
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("validated user: ", nicpp);
-      result(null, { nicpp: nicpp, validated: isValidated });
+      console.log("validated user: ", uid);
+      result(null, { UID: uid, validated: isValidated });
     }
   );
 };

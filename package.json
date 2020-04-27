@@ -4,7 +4,9 @@
   "description": "Node.js Restful CRUD API with Node.js, Express and MySQL",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "client": "cd frontend && npm start",
+    "server": "cd backend && nodemon server.js"
   },
   "keywords": [
     "nodejs",
@@ -21,5 +23,8 @@
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
   }
 }
