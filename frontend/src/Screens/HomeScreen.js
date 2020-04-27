@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { registerRequest } from "../Methods/authMethod";
 import { logout } from "../Methods/authMethod";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import { SignUp } from "./SignUp"
+import {Users} from './DataGrid'
 
 import {
   Button,
@@ -130,23 +132,3 @@ function About(props) {
   );
 }
 
-function Users(props) {
-  function print() {
-    console.log(props);
-  }
-  props.setNavTitle("User");
-
-  return (
-    <div>
-      <div className="container">
-        <h1 className="mt-4">User Management Screen</h1>
-        <Button onClick={print}></Button>
-        <p>
-          The logo in the navbar is now a default Bootstrap feature in Bootstrap
-          4! Make sure to set the width and height of the logo within the HTML
-          or with CSS. For best results, use an SVG image as your logo.
-        </p>
-      </div>
-    </div>
-  );
-}

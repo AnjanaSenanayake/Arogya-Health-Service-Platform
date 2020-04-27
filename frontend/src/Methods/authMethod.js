@@ -14,13 +14,10 @@ export function getUserInfo(){
 
 }
 
-
 //  Return info regarding patiants
 export function getPatiantInfo({name = null , nic=null, age=null}){
 
 }
-
-
 
 export function logout(setLoginStates){
     setLoginStates(null)
@@ -106,7 +103,7 @@ export async  function registerRequest(name,nic,posi,phone,access,ds,gs,pw){
 }
 
 // Template for auth request
-export async function authRequest(url='',requestBody={}){
+export async function authRequest(url='',requestBody={},setState){
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -115,12 +112,13 @@ export async function authRequest(url='',requestBody={}){
   const qs = require('querystring');
   axios.post(getIp()+ url, qs.stringify(requestBody), config)
       .then((result) => {
-     
+          setState(result);
           console.log(result)
       
       })
       .catch((err) => {
         console.log(err)
+        setState(err);
         //setloginStates(false);
       })
 }
