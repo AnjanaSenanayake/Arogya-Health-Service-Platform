@@ -77,7 +77,7 @@ exports.findAll = (req, res) => {
 
 // Retrieve Users by GNID from the resultbase.
 exports.getUsersByGNID = (req,res) => {
-  User.getAllByGNID(req.GNID, (err, result) => {
+  User.getAllByGNID(req.body.GNID, (err, result) => {
     if(err) {
       res.status(500).send({message:err.message || "Some error occurred while retrieving users."});
       return;

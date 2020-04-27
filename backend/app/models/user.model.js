@@ -205,6 +205,7 @@ User.getAllByGNID = (GNID, result) => {
         GNDivision: res[0].GNDivision,
         DSDivision: res[0].DSDivision
       }
+      console.log(user);
       sql.query("SELECT * FROM User WHERE UID=?", [user.UID], (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -221,6 +222,8 @@ User.getAllByGNID = (GNID, result) => {
           user.MaritalStatus = res[0].MaritalStatus;
           user.IsVerified = res[0].IsVerified;
 
+          console.log(user);
+
           sql.query("SELECT * FROM UserContactData WHERE UID=?", [user.UID], (err, res) => {
             if (err) {
               console.log("error: ", err);
@@ -231,12 +234,12 @@ User.getAllByGNID = (GNID, result) => {
               user.EmergencyContactRelation = res[0].EmergencyContactRelation;
             }
           });
+          console.log("found user: ", user);
+          result(null, user);
+          return;
         }
       });
     }      
-    console.log("found user: ", user);
-    result(null, user);
-    return;
   });
 };
 
