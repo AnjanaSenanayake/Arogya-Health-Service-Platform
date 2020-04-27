@@ -5,12 +5,16 @@ Arogya is a platform for personalized medical assitance and information
 
 Arogya requires [Node.js](https://nodejs.org/) v10+ to run.
 
-Install the dependencies and start the server.
+Install the dependencies and start the server + front-end.
 
 ```sh
+$ npm install
 $ cd backend
 $ npm install
-$ node server.js
+$ cd ../frontend
+$ npm install
+$ cd ..
+$ npm start
 ```
 
 
