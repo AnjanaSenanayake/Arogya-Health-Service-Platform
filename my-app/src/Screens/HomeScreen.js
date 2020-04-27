@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import logo from "../img/sl.png";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { registerRequest } from "../Methods/authMethod";
@@ -17,6 +17,15 @@ import {
 } from "react-bootstrap";
 export function WebApp(props) {
   const [navTitle, setNavTitle] = React.useState();
+
+
+  
+  useEffect(() => {
+    document.title = 'Admin-'+navTitle;
+
+    // setloginStates(token !== "null");
+  }, [navTitle]);
+
   function logoutHandle() {
     logout(props.setloginStates);
 
@@ -33,7 +42,7 @@ export function WebApp(props) {
               <img src={logo} className="App-logo" alt="logo" />
             </a>
             {/* <h1>{navTitle}</h1> */}
-            <a className="navbar-brand" href="#"><h2>{navTitle}</h2></a>
+            {/* <a className="navbar-brand" href="#"><h2>{navTitle}</h2></a> */}
 
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav mr-auto">

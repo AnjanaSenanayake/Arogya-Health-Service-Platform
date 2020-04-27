@@ -14,6 +14,7 @@ function App() {
   let token;
 
   useEffect(() => {
+    document.title = "Web App - Administrators";
     const token = localStorage.getItem("token");
     // console.log(,token)
     if(token != 'null'){
