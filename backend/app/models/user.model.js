@@ -134,12 +134,12 @@ User.findByUID = (uid, result) => {
           user.AddressLine2 = res[0].AddressLine2;
           user.AddressLine3 = res[0].AddressLine3;
           user.AddressLine4 = res[0].AddressLine4;
-          sql.query("SELECT DivisionalSecretariatName FROM DivisionalSecretariats WHERE DSID=?", [res[0].DSDivision], (err, res) => {
+          sql.query("SELECT DivisionalSecretariatName, DistrictID FROM DivisionalSecretariats WHERE DSID=?", [res[0].DSDivision], (err, res) => {
             if (err) {
               console.log("error: ", err);
             } else if (res.length) {
-              user.DSDivision = res[0].DSDivision;
-              sql.query("SELECT DistrictName FROM Districts WHERE DSID=? Limit 1", [res[0].DSDivision], (err, res) => {
+              user.DSDivision = res[0].DivisionalSecretariatName;
+              sql.query("SELECT DistrictName FROM Districts WHERE DistrictID=? Limit 1", [res[0].DistrictID], (err, res) => {
                 if (err) {
                   console.log("error: ", err);
                 } else if (res.length) {
@@ -152,7 +152,7 @@ User.findByUID = (uid, result) => {
             if (err) {
               console.log("error: ", err);
             } else if (res.length) {
-              user.GNDivision = res[0].GNDivision;
+              user.GNDivision = res[0].GNDivisionName;
             }      
           });
         }      
