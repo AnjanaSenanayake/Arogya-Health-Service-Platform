@@ -1,12 +1,12 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import logo from "../img/sl.png";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { registerRequest } from "../Methods/authMethod";
 import { logout } from "../Methods/authMethod";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { SignUp } from "./SignUp"
-import {Users} from './DataGrid'
+import { SignUp } from "./SignUp";
+import { Users } from "./DataGrid";
 
 import {
   Button,
@@ -20,26 +20,34 @@ import {
 export function WebApp(props) {
   const [navTitle, setNavTitle] = React.useState();
 
-
-  
   useEffect(() => {
-    document.title = 'Admin-'+navTitle;
+    document.title = "Admin-" + navTitle;
 
     // setloginStates(token !== "null");
   }, [navTitle]);
 
   function logoutHandle() {
     logout(props.setloginStates);
-
   }
   return (
     <Router>
       <div>
         <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark static-top">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div className="container collapse navbar-collapse" id="navbarSupportedContent">
+          <div
+            className="container collapse navbar-collapse"
+            id="navbarSupportedContent"
+          >
             <a className="navbar-brand" href="#">
               <img src={logo} className="App-logo" alt="logo" />
             </a>
@@ -49,52 +57,69 @@ export function WebApp(props) {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                  <Link className={navTitle == 'User' ? "nav-link h5" : "nav-link"} to="/users">
+                  <Link
+                    className={navTitle == "User" ? "nav-link h5" : "nav-link"}
+                    to="/users"
+                  >
                     Users
-                </Link>
+                  </Link>
                 </li>
 
                 <li className="nav-item">
-
-                  <Link className={navTitle == 'About' ? "nav-link h5" : "nav-link"} to="/about">
+                  <Link
+                    className={navTitle == "About" ? "nav-link h5" : "nav-link"}
+                    to="/about"
+                  >
                     About
-                </Link>
-
-
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className={navTitle == 'Home' ? "nav-link h5" : "nav-link"} to="/">
+                  <Link
+                    className={navTitle == "Home" ? "nav-link h5" : "nav-link"}
+                    to="/"
+                  >
                     Home
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className={navTitle == 'SignUp' ? "nav-link h5" : "nav-link"} to="/signup">
+                  <Link
+                    className={
+                      navTitle == "SignUp" ? "nav-link h5" : "nav-link"
+                    }
+                    to="/signup"
+                  >
                     Sign Up
                   </Link>
                 </li>
               </ul>
 
-              <Button size="sm" variant="outline-secondary" className="nav-item" onClick={logoutHandle}>
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                className="nav-item"
+                onClick={logoutHandle}
+              >
                 Sign Out
               </Button>
             </div>
           </div>
         </nav>
-
-        <Switch>
-          <Route path="/signup">
-            <SignUp setNavTitle={setNavTitle} />
-          </Route>
-          <Route path="/about">
-            <About setNavTitle={setNavTitle} />
-          </Route>
-          <Route path="/users">
-            <Users setNavTitle={setNavTitle} />
-          </Route>
-          <Route path="/">
-            <Home setNavTitle={setNavTitle} />
-          </Route>
-        </Switch>
+        <div style={{padding:50}}>
+          <Switch>
+            <Route path="/signup">
+              <SignUp setNavTitle={setNavTitle} />
+            </Route>
+            <Route path="/about">
+              <About setNavTitle={setNavTitle} />
+            </Route>
+            <Route path="/users">
+              <Users setNavTitle={setNavTitle} />
+            </Route>
+            <Route path="/">
+              <Home setNavTitle={setNavTitle} />
+            </Route>
+          </Switch>
+        </div>
       </div>
     </Router>
   );
@@ -131,4 +156,3 @@ function About(props) {
     </div>
   );
 }
-

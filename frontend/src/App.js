@@ -101,7 +101,9 @@ function LoginForm(props) {
       <Row className="row">
         <Col></Col>
         <Col xs={4} className="font-weight-light">
+        <label>
           {"National ID Card number"}
+          </label>
           <input
             type="text"
             placeholder="987654321V"
@@ -118,7 +120,9 @@ function LoginForm(props) {
       <Row className="row">
         <Col></Col>
         <Col xs={4} className="font-weight-light">
+        <label>
           {"Password"}
+          </label>
           <input
             type="password"
             placeholder="P@R5W0r6"
