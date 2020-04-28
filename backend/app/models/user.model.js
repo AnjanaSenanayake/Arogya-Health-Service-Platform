@@ -282,11 +282,11 @@ User.update = (uid, user, result) => {
                   AddressLine2: user.AddressLine2,
                   AddressLine3: user.AddressLine3,
                   AddressLine4: user.AddressLine4,
-                  DSDivision: user.DSDivision,
-                  GNDivision: user.GNDivision
+                  DSDivision: null,
+                  GNDivision: null
                 };
                 sql.query(
-                  "INSERT INTO UserResidentialData SET ? ON DUPLICATE KEY UPDATE AddressLine1=VALUES(AddressLine1), AddressLine2=VALUES(AddressLine2), AddressLine3=VALUES(AddressLine3), AddressLine4=VALUES(AddressLine4), DSDivision=VALUES(DSDivision), GNDivision=VALUES(GNDivision)",addressData, (err, res) => {
+                  "INSERT INTO UserResidentialData SET ? ON DUPLICATE KEY UPDATE AddressLine1=VALUES(AddressLine1), AddressLine2=VALUES(AddressLine2), AddressLine3=VALUES(AddressLine3), AddressLine4=VALUES(AddressLine4)",addressData, (err, res) => {
                     if (err) {
                       console.log("error: ", err);
                       result(null, err);
@@ -297,6 +297,16 @@ User.update = (uid, user, result) => {
                       console.log("not_found UserResidentialData");
                       return;
                     } else {
+                      sql.query("UPDATE UserResidentialData SET DSDivision=(SELECT DSID FROM DivisionalSecretariats WHERE DivisionalSecretariatName=?) WHERE UID=?",[user.DSDivision, uid],  (err, res) => {
+                        if(err) {
+                          console.log("error: ", err);
+                        }
+                      });
+                      sql.query("UPDATE UserResidentialData SET GNDivision=(SELECT GNID FROM GramaNiladhariDivisions WHERE GNDivisionName=?) WHERE UID=?",[user.GNDivision, uid], (err, res) => {
+                        if (err) {
+                          console.log("error: ", err);
+                        }
+                      });
                       console.log("updated user: ", { uid: uid, ...user });
                       result(null, { uid: uid, ...user });
                     }
