@@ -125,23 +125,34 @@ User.findByUID = (uid, result) => {
           user.EmergencyContact = res[0].EmergencyContact;
           user.EmergencyContactRelation = res[0].EmergencyContactRelation;
         }
-
-        sql.query("SELECT * FROM UserResidentialData WHERE UID=?", [user.UID], (err, res) => {
-          if (err) {
-            console.log("error: ", err);
-          } else if (res.length) {
-            user.AddressLine1 = res[0].AddressLine1;
-            user.AddressLine2 = res[0].AddressLine2;
-            user.AddressLine3 = res[0].AddressLine3;
-            user.AddressLine4 = res[0].AddressLine4;
-            user.GNDivision = res[0].GNDivision;
-            user.DSDivision = res[0].DSDivision;
-          }      
-          console.log("found user: ", user);
-          result(null, user);
-          return;
-        });
       });
+      sql.query("SELECT * FROM UserResidentialData WHERE UID=?", [user.UID], (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+        } else if (res.length) {
+          user.AddressLine1 = res[0].AddressLine1;
+          user.AddressLine2 = res[0].AddressLine2;
+          user.AddressLine3 = res[0].AddressLine3;
+          user.AddressLine4 = res[0].AddressLine4;
+          sql.query("SELECT DivisionalSecretariatName FROM DivisionalSecretariats WHERE DSID=?", [res[0].DSDivision], (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+            } else if (res.length) {
+              user.DSDivision = res[0].DSDivision;
+            }      
+          });
+          sql.query("SELECT GNDivisionName FROM GramaNiladhariDivisions WHERE GNID=?", [res[0].GNDivision], (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+            } else if (res.length) {
+              user.GNDivision = res[0].GNDivision;
+            }      
+          });
+        }      
+      });
+      console.log("found user: ", user);
+      result(null, user);
+      return;
     } else{
       // not found user with the nicpp
       result({ kind: "not_found" }, null);
