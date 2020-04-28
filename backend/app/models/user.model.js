@@ -99,64 +99,13 @@ User.findByNICPP = (nicpp, result) => {
 };
 
 User.findByUID = (uid, result) => {
-  sql.query("SELECT * FROM User WHERE UID=?", [uid], (err, res) => {
+  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats,GramaNiladhariDivisions,Districts WHERE User.UID=? AND User.UID = UserContactData.UID AND User.UID = UserResidentialData.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision AND Districts.DistrictID = DivisionalSecretariats.DistrictID", [uid], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }else if (res.length) {
-      var user = {
-        UID: res[0].UID,
-        PID: res[0].PID,
-        Name: res[0].Name,
-        NICPP: res[0].NICPP,
-        PrimaryContact: res[0].PrimaryContact,
-        DOB: res[0].DOB,
-        Gender: res[0].Gender,
-        MaritalStatus: res[0].MaritalStatus,
-        IsVerified: res[0].IsVerified
-      }
-      sql.query("SELECT * FROM UserContactData WHERE UID=?", [user.UID], (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-        } else if(res.length) {
-          user.SecondaryContact1 = res[0].SecondaryContact1;
-          user.SecondaryContact2 = res[0].SecondaryContact2;
-          user.EmergencyContact = res[0].EmergencyContact;
-          user.EmergencyContactRelation = res[0].EmergencyContactRelation;
-        }
-      });
-      sql.query("SELECT * FROM UserResidentialData WHERE UID=?", [user.UID], (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-        } else if (res.length) {
-          user.AddressLine1 = res[0].AddressLine1;
-          user.AddressLine2 = res[0].AddressLine2;
-          user.AddressLine3 = res[0].AddressLine3;
-          user.AddressLine4 = res[0].AddressLine4;
-          sql.query("SELECT DivisionalSecretariatName, DistrictID FROM DivisionalSecretariats WHERE DSID=?", [res[0].DSDivision], (err, res) => {
-            if (err) {
-              console.log("error: ", err);
-            } else if (res.length) {
-              user.DSDivision = res[0].DivisionalSecretariatName;
-              sql.query("SELECT DistrictName FROM Districts WHERE DistrictID=? Limit 1", [res[0].DistrictID], (err, res) => {
-                if (err) {
-                  console.log("error: ", err);
-                } else if (res.length) {
-                  user.District = res[0].DistrictName;
-                }      
-              });
-            }      
-          });
-          sql.query("SELECT GNDivisionName FROM GramaNiladhariDivisions WHERE GNID=?", [res[0].GNDivision], (err, res) => {
-            if (err) {
-              console.log("error: ", err);
-            } else if (res.length) {
-              user.GNDivision = res[0].GNDivisionName;
-            }      
-          });
-        }      
-      });
+      var user = res[0];
       console.log("found user: ", user);
       result(null, user);
       return;
