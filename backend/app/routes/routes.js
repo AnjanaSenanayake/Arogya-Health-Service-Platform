@@ -57,6 +57,12 @@ module.exports = app => {
   app.route('/getGNByDivision')
   .post(Admin.getGNByDivision);
 
+  app.route('/getDSByDistrictName')
+  .post(User.getDSByDistrictName);
+
+  app.route('/getGNByDivisionName')
+  .post(User.getGNByDivisionName);
+
   // // Delete a user with nicpp
   // app.delete("/user/:nicpp", user.delete);
 

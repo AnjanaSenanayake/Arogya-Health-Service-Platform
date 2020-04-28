@@ -19,6 +19,18 @@ GNDivision.getGNByDivision = (DSID, result) => {
     });
 };
 
+GNDivision.getGNByDivisionName = (DSName, result) => {
+    sql.query("SELECT * FROM GramaNiladhariDivisions WHERE DSID=(SELECT DSID FROM DivisionalSecretariats WHERE DivisionalSecretariatName=?)", [DSName], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        console.log("GramaNiladhariDivisions list for " + DSName + ": ", res);
+        result(null, res);
+    });
+};
+
 GNDivision.getAll = (result) => {
     sql.query("SELECT * FROM GramaNiladhariDivisions", (err, res) => {
         if (err) {
