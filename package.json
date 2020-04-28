@@ -4,9 +4,8 @@
   "description": "Node.js Restful CRUD API with Node.js, Express and MySQL",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "client": "cd frontend && npm start",
-    "server": "cd backend && nodemon server.js"
+    "start": "node backend/server.js",
+    "heroku-postbuild": "cd frontend && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "keywords": [
     "nodejs",

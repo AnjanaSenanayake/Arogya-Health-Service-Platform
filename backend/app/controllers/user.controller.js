@@ -3,6 +3,8 @@ var uuid = require('uuid');
 const User = require("../models/user.model.js");
 const UserLogin = require("../models/user.profile.model.js");
 const EpidemicAlerts = require("../models/epidemic.alerts.model.js");
+const DivisionalSectretariats = require("../models/ds.model.js");
+const GNDivisions = require("../models/gn.model.js");
 const MESSAGES = require("../utils/messages.js");
 
 // Create and Save a new user
@@ -72,6 +74,19 @@ exports.findAll = (req, res) => {
       res.send(result);
       return;
     } 
+  });
+};
+
+// Retrieve Users by GNID from the resultbase.
+exports.getUsersByGNID = (req,res) => {
+  User.getAllByGNID(req.body.GNID, (err, result) => {
+    if(err) {
+      res.status(500).send({message:err.message || "Some error occurred while retrieving users."});
+      return;
+    } else {
+      res.send(result);
+      return;
+    }
   });
 };
 
@@ -181,6 +196,34 @@ exports.createEpidemicAlert = (req,res) => {
     } else res.send(result);
   });
 }
+
+// Retrieve all ds divisions for district from the resultbase.
+exports.getDSByDistrictName = (req, res) => {
+  DivisionalSectretariats.getDSByDistrictName(req.body.districtName, (err, result) => {
+    if (err) {
+      res.status(500).send({message:err.message || "Some error occurred while retrieving divisionalSectretariats"});
+      return;
+    }
+    else {
+      res.send(result);
+      return;
+    } 
+  });
+};
+
+// Retrieve all gn divisions for division from the resultbase.
+exports.getGNByDivisionName = (req, res) => {
+  GNDivisions.getGNByDivisionName(req.body.DSName, (err, result) => {
+    if (err) {
+      res.status(500).send({message:err.message || "Some error occurred while retrieving grama niladhari divisions"});
+      return;
+    }
+    else {
+      res.send(result);
+      return;
+    } 
+  });
+};
 
 // Delete an User with the specified nicpp in the request
 exports.delete = (req, res) => {
