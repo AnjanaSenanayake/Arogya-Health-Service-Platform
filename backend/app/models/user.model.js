@@ -139,6 +139,13 @@ User.findByUID = (uid, result) => {
               console.log("error: ", err);
             } else if (res.length) {
               user.DSDivision = res[0].DSDivision;
+              sql.query("SELECT DistrictName FROM Districts WHERE DSID=? Limit 1", [res[0].DSDivision], (err, res) => {
+                if (err) {
+                  console.log("error: ", err);
+                } else if (res.length) {
+                  user.District = res[0].DistrictName;
+                }      
+              });
             }      
           });
           sql.query("SELECT GNDivisionName FROM GramaNiladhariDivisions WHERE GNID=?", [res[0].GNDivision], (err, res) => {
