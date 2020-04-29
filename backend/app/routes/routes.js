@@ -39,6 +39,9 @@ module.exports = app => {
   app.route('/adminLogin')
     .post(AdminProfile.login);
 
+  app.route('/getAdminByAID')
+    .post(Admin.getAdminByAID);
+
   app.route('/InsertEpidemic')
     .post(Admin.insertEpidemic);
 

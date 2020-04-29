@@ -58,7 +58,7 @@ Admin.findByNIC = (nic, result) => {
 };
 
 Admin.findByAID = (AID, result) => {
-  sql.query("SELECT * FROM admin WHERE AID=?", [AID], (err, res) => {
+  sql.query("SELECT * FROM Admin LEFT JOIN AdminAccessLevel ON Admin.ALID = AdminAccessLevel.ALID LEFT JOIN DivisionalSecretariats ON Admin.DSID = DivisionalSecretariats.DSID LEFT JOIN GramaNiladhariDivisions ON Admin.GNID = GramaNiladhariDivisions.GNID WHERE Admin.AID=?", [AID], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
