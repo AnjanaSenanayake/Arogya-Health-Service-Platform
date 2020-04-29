@@ -17,18 +17,122 @@ import {
   tr,
   thead,
   Card,
-  Badge
+  Badge,
 } from "react-bootstrap";
+
+function Poper(props) {
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  function handleVerify(user) {}
+
+  function handleDelete(user) {}
+  
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        View
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{props.data?.Name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Card style={{ padding: 10 }}>
+            {/* <Card.Title>{props.data?.Name}</Card.Title> */}
+            <Card.Text>
+              NIC: {props.data?.NICPP}
+              <br />
+              DOB: {props.data?.DOB}
+              <br />
+              PrimaryContact: {props.data?.PrimaryContact}
+              <br />
+              Address:{" "}
+              {props.data?.AddressLine1 +
+                ", " +
+                props.data?.AddressLine2 +
+                ", " +
+                props.data?.AddressLine3 +
+                ", " +
+                props.data?.AddressLine4}
+              <br />
+              GNDivision: {props.data?.GNDivision}
+              <br />
+              DSDivision: {props.data?.DSDivision}
+              <br />
+              Gender: {props.data?.Gender}
+              <br />
+              MaritalStatus: {props.data?.MaritalStatus}
+              <br />
+              IsVerified:{" "}
+              {props.data?.IsVerified == 0 ? (
+                <Badge size="sm" variant="warning">
+                  No
+                </Badge>
+              ) : (
+                <Badge size="sm" variant="danger">
+                  Yes
+                </Badge>
+              )}
+              <br />
+              UID: {props.data?.UID}
+              <br />
+            </Card.Text>
+
+            <Card.Footer>
+              {props.data?.IsVerified == 0 ? (
+                <Button
+                  variant="warning"
+                  onClick={() => {
+                    handleVerify(props.data);
+                  }}
+                >
+                  Verify
+                </Button>
+              ) : (
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    handleVerify(props.data);
+                  }}
+                >
+                  Un Verify
+                </Button>
+              )}
+
+              <Button
+                variant="danger"
+                onClick={() => {
+                  handleDelete(props.data);
+                }}
+              >
+                Delete
+              </Button>
+            </Card.Footer>
+          </Card>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 
 export function Users(props) {
   const [refresh, dorefresh] = React.useState();
   const [dataSet, setDataSet] = React.useState();
   const [items, setItems] = React.useState();
-  const [selectedItem, setSelectedItem] = React.useState();
 
   function print() {
     console.log(props);
   }
+
   props.setNavTitle("User");
 
   useEffect(() => {
@@ -46,129 +150,77 @@ export function Users(props) {
 
     let tableRows = null;
 
-    // if (dataSet?.data) {
-    //   tableRows = <tr>
-    //     {dataSet?.data.map((data, index) => {
-    //       return (
-    //         <td key={index}>
-    //           {"data"}
-    //         </td>
-    //       );
-    //     })}
-    //   </tr>
-    // }
+    if (dataSet?.data) {
+      tableRows = dataSet?.data.map((data, index) => {
+        return (
+          <tr key={data.Name}>
+            <th>#</th>
+            <td>{data?.Name}</td>
+            <td>
+              {data?.AddressLine1 +
+                ", " +
+                data?.AddressLine2 +
+                ", " +
+                data?.AddressLine3 +
+                ", " +
+                data?.AddressLine4}
+            </td>
+            <td>{data?.DSDivision}</td>
+            <td>{data?.Gender}</td>
 
-    setItems(items);
+            <td>
+              {data?.IsVerified == 0 ? (
+                <Badge variant="warning">No</Badge>
+              ) : (
+                <Badge variant="secondary">Yes</Badge>
+              )}
+
+              {/* {dataSet?.data?.IsVerified} */}
+            </td>
+            <td>
+              <Poper data={data}></Poper>
+            </td>
+          </tr>
+        );
+      });
+    }
+
+    setItems(tableRows);
   }, [dataSet]);
 
   return (
     <div>
       <br></br>
-      <br></br> <br></br>
       <br></br>
-      {/* <Container>
-  <Row>
-   
-    <Col xs={8}>2 of 3 (wider)</Col>
-    <Col>3 of 3</Col>
-  </Row>
-  </Container> */}
-      {selectedItem == null ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>DSDivision</th>
-              <th>Gender</th>
-              <th>IsVerified</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          {/* <tbody>{items}</tbody>  GNDivision: "1"
+
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>DSDivision</th>
+            <th>Gender</th>
+            <th>IsVerified</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        {/* <tbody>{items}</tbody>  GNDivision: "1"
 DSDivision*/}
-          {dataSet?.data == null ? (
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-
-              <td>Loading</td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          ) : (
-            <tr>
-              <th>#</th>
-              <td>{dataSet?.data?.Name}</td>
-              <td>
-                {dataSet?.data?.AddressLine1 +
-                  ", " +
-                  dataSet?.data?.AddressLine2 +
-                  ", " +
-                  dataSet?.data?.AddressLine3 +
-                  ", " +
-                  dataSet?.data?.AddressLine4}
-              </td>
-              <td>{dataSet?.data?.DSDivision}</td>
-              <td>{dataSet?.data?.Gender}</td>
-
-              <td>
-                {dataSet?.data?.IsVerified==0 ?<Badge variant="warning">un-verified</Badge>:<Badge variant="secondary">success</Badge>}
-              
-                {/* {dataSet?.data?.IsVerified} */}
-                </td>
-              <td>
-                <Button
-                  variant="warning"
-                  onClick={() => {
-                    setSelectedItem(dataSet?.data);
-                  }}
-                >
-                  View
-                </Button>
-              </td>
-            </tr>
-          )}
-        </Table>
-      ) : (
-        <div>
-          <Container>
-            <Row>
-              <Col></Col>
-              <Col xs={6}>
-                <Card style={{ padding: 10 }}>
-                  <Card.Title>{selectedItem?.Name}</Card.Title>
-                  <Card.Text>
-                    NIC: {selectedItem?.NICPP}<br/>
-                    DOB: {selectedItem?.DOB}<br/>
-                    PrimaryContact: {selectedItem?.NICPP}<br/>
-                    Address: {selectedItem?.AddressLine1+", "+selectedItem?.AddressLine2+", "+selectedItem?.AddressLine3+", "+selectedItem?.AddressLine4}<br/>
-                    GNDivision: {selectedItem?.GNDivision}<br/>
-                    DSDivision: {selectedItem?.NICPP}<br/>
-                    Gender: {selectedItem?.DSDivision}<br/>
-                    MaritalStatus: {selectedItem?.MaritalStatus}<br/>
-                    IsVerified: {dataSet?.data?.IsVerified==0 ? <Button   size="sm" variant="warning">un-verified</Button>:<Button  size="sm" variant="secondary">success</Button>}
-              <br/>
-                    UID: {selectedItem?.UID}<br/>
-                  </Card.Text>
-                  <Button
-                    variant="danger"
-                    onClick={() => {
-                      setSelectedItem(null);
-                    }}
-                  >
-                    Close
-                  </Button>
-                </Card>
-              </Col>
-              <Col></Col>
-            </Row>
-          </Container>
-        </div>
-      )}
+        {dataSet?.data == null ? (
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Loading</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        ) : (
+          items
+        )}
+      </Table>
     </div>
   );
 }
