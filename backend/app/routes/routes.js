@@ -7,61 +7,73 @@ module.exports = app => {
 
   // Register a new user
   app.route('/register')
-  .post(Profile.register);
+    .post(Profile.register);
 
   // login a user
   app.route('/login')
-  .post(Profile.login);
+    .post(Profile.login);
 
   // Update a user with uid
   app.route('/updateUser')
-  .post(User.update);
+    .post(User.update);
 
   // Create a new user
   app.route('/createUser')
-  .post(User.create);
+    .post(User.create);
 
   // Retrieve user by NICPP
   app.route('/getUserByUID')
-  .post(User.findOne);
+    .post(User.findOne);
 
   // Retrieve all child users with pid
   app.route('/getAllChildUsers')
-  .post(User.getAllChildUsers);
+    .post(User.getAllChildUsers);
 
   // Retrieve users with GNID  
   app.route('/getUsersByGNID')
-  .post(User.getUsersByGNID);
+    .post(User.getUsersByGNID);
 
   app.route('/adminRegister')
-  .post(AdminProfile.register);
+    .post(AdminProfile.register);
 
   app.route('/adminLogin')
-  .post(AdminProfile.login);
+    .post(AdminProfile.login);
 
   app.route('/InsertEpidemic')
-  .post(Admin.insertEpidemic);
+    .post(Admin.insertEpidemic);
 
   app.route('/getAllEpidemics')
-  .post(Admin.getAllEpidemics);
+    .post(Admin.getAllEpidemics);
 
   app.route('/createEpidemicAlert')
-  .post(User.createEpidemicAlert);
+    .post(User.createEpidemicAlert);
 
   app.route('/getAllDistricts')
-  .post(Admin.getAllDistricts);
+    .post(Admin.getAllDistricts);
 
   app.route('/getDSByDistrict')
-  .post(Admin.getDSByDistrict);
+    .post(Admin.getDSByDistrict);
 
   app.route('/getGNByDivision')
-  .post(Admin.getGNByDivision);
+    .post(Admin.getGNByDivision);
 
   app.route('/getDSByDistrictName')
-  .post(User.getDSByDistrictName);
+    .post(User.getDSByDistrictName);
 
   app.route('/getGNByDivisionName')
-  .post(User.getGNByDivisionName);
+    .post(User.getGNByDivisionName);
+
+  app.route('/requestCurfewPass')
+    .post(User.requestCurfewPass);
+
+  app.route('/getAllPassRequestsByUser')
+    .post(User.getAllPassRequestsByUser);
+
+  app.route('/getAllPassRequestsForUser')
+    .post(User.getAllPassRequestsForUser);
+
+  app.route('/cancelRequestedPass')
+    .delete(User.cancelRequestedPass);
 
   // // Delete a user with nicpp
   // app.delete("/user/:nicpp", user.delete);
