@@ -189,12 +189,66 @@ User.getAll = result => {
   });
 };
 
+User.getAllByGNID = (GNID, result) => {
+  sql.query("SELECT * FROM UserResidentialData WHERE GNDivision=?", [GNID], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    } else if (res.length) {
+      var user = {
+        UID: res[0].UID,
+        AddressLine1: res[0].AddressLine1,
+        AddressLine2: res[0].AddressLine2,
+        AddressLine3: res[0].AddressLine3,
+        AddressLine4: res[0].AddressLine4,
+        GNDivision: res[0].GNDivision,
+        DSDivision: res[0].DSDivision
+      }
+      console.log(user);
+      sql.query("SELECT * FROM User WHERE UID=?", [user.UID], (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          // not found user with the UID
+          result({ kind: "not_found" }, null);
+          return;
+        }else if (res.length) {
+          user.PID = res[0].PID;
+          user.Name = res[0].Name;
+          user.NICPP = res[0].NICPP;
+          user.PrimaryContact = res[0].PrimaryContact;
+          user.DOB = res[0].DOB;
+          user.Gender = res[0].Gender;
+          user.MaritalStatus = res[0].MaritalStatus;
+          user.IsVerified = res[0].IsVerified;
+
+          console.log(user);
+
+          sql.query("SELECT * FROM UserContactData WHERE UID=?", [user.UID], (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+            } else if(res.length) {
+              user.SecondaryContact1 = res[0].SecondaryContact1;
+              user.SecondaryContact2 = res[0].SecondaryContact2;
+              user.EmergencyContact = res[0].EmergencyContact;
+              user.EmergencyContactRelation = res[0].EmergencyContactRelation;
+            }
+          });
+          console.log("found user: ", user);
+          result(null, user);
+          return;
+        }
+      });
+    }      
+  });
+};
+
 User.update = (uid, user, result) => {
   sql.query(
     "UPDATE User SET Name = ?, PrimaryContact = ?, Gender = ?, DOB = ?, MaritalStatus = ?, IsVerified = ? WHERE UID = ?",[user.Name, user.PrimaryContact, user.Gender, user.DOB, user.MaritalStatus, false, uid], (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
+        result(err, null);
         return;
       } else if (res.affectedRows == 0) {
         // not found User with the id
@@ -202,119 +256,65 @@ User.update = (uid, user, result) => {
         console.log("not_found User");
         return;
       } else {
+        var contactData = {
+          UID: uid,
+          SecondaryContact1: user.SecondaryContact1,
+          SecondaryContact2: user.SecondaryContact2,
+          EmergencyContact: user.EmergencyContact,
+          EmergencyContactRelation: user.EmergencyContactRelation
+        };
+        console.log(contactData);
         sql.query(
-          "UPDATE UserContactData SET SecondaryContact1 = ?, SecondaryContact2 = ?, EmergencyContact = ?, EmergencyContactRelation = ? WHERE UID = ?",[user.SecondaryContact1, user.SecondaryContact2, user.EmergencyContact, user.EmergencyContactRelation, uid], (err, res) => {
+          "INSERT INTO UserContactData SET ? ON DUPLICATE KEY UPDATE SecondaryContact1=VALUES(SecondaryContact1), SecondaryContact2=VALUES(SecondaryContact2), EmergencyContact=VALUES(EmergencyContact), EmergencyContactRelation=VALUES(EmergencyContactRelation)", contactData, (err, res) => {
             if (err) {
               console.log("error: ", err);
-              result(null, err);
+              result(err, null);
               return;
             } else if (res.affectedRows == 0) {
               // not found User with the id
-              var contactData = {
-                UID: uid,
-                SecondaryContact1: user.SecondaryContact1,
-                SecondaryContact2: user.secondaryContact2,
-                EmergencyContact: user.EmergencyContact,
-                EmergencyContactRelation: user.EmergencyContactRelation
-              };
-              console.log(contactData);
-              sql.query(
-                "INSERT INTO UserContactData SET ?", contactData, (err, res) => {
-                  if (err) {
-                    console.log("error: ", err);
-                    result(null, err);
-                    return;
-                  } else if (res.affectedRows == 0) {
-                    // not found User with the id
-                    sql.query(
-                      "UPDATE UserResidentialData SET AddressLine1 = ?, AddressLine2 = ?, AddressLine3 = ?, AddressLine4 = ?, DSDivision = ?, GNDivision = ? WHERE UID = ?",[user.AddressLine1, user.AddressLine2, user.AddressLine3, user.AddressLine4, user.DSDivision, user.GNDivision, uid], (err, res) => {
+              result({ kind: "not_found" }, null);
+              console.log("not_found UserContactData");
+              return;
+            } else {
+                var addressData = {
+                  UID: uid,
+                  AddressLine1: user.AddressLine1,
+                  AddressLine2: user.AddressLine2,
+                  AddressLine3: user.AddressLine3,
+                  AddressLine4: user.AddressLine4,
+                  DSDivision: null,
+                  GNDivision: null
+                };
+                sql.query(
+                  "INSERT INTO UserResidentialData SET ? ON DUPLICATE KEY UPDATE AddressLine1=VALUES(AddressLine1), AddressLine2=VALUES(AddressLine2), AddressLine3=VALUES(AddressLine3), AddressLine4=VALUES(AddressLine4)",addressData, (err, res) => {
+                    if (err) {
+                      console.log("error: ", err);
+                      result(null, err);
+                      return;
+                    } else if (res.affectedRows == 0) {
+                      // not found User with the id
+                      result({ kind: "not_found" }, null);
+                      console.log("not_found UserResidentialData");
+                      return;
+                    } else {
+                      sql.query("UPDATE UserResidentialData SET DSDivision=(SELECT DSID FROM DivisionalSecretariats WHERE DivisionalSecretariatName=?) WHERE UID=?",[user.DSDivision, uid],  (err, res) => {
+                        if(err) {
+                          console.log("error: ", err);
+                        }
+                      });
+                      sql.query("UPDATE UserResidentialData SET GNDivision=(SELECT GNID FROM GramaNiladhariDivisions WHERE GNDivisionName=?) WHERE UID=?",[user.GNDivision, uid], (err, res) => {
                         if (err) {
                           console.log("error: ", err);
-                          result(null, err);
-                          return;
-                        } else if (res.affectedRows == 0) {
-                          // not found User with the id
-                          var addressData = {
-                            UID: uid,
-                            AddressLine1: user.AddressLine1,
-                            AddressLine2: user.AddressLine2,
-                            AddressLine3: user.AddressLine3,
-                            AddressLine4: user.AddressLine4,
-                            DSDivision: user.DSDivision,
-                            GNDivision: user.GNDivision
-                          };
-                          sql.query(
-                            "INSERT INTO UserResidentialData SET ?",addressData, (err, res) => {
-                              if (err) {
-                                console.log("error: ", err);
-                                result(null, err);
-                                return;
-                              } else if (res.affectedRows == 0) {
-                                // not found User with the id
-                                result({ kind: "not_found" }, null);
-                                console.log("not_found UserResidentialData");
-                                return;
-                              } else {
-                                console.log("updated user: ", { uid: uid, ...user });
-                                result(null, { uid: uid, ...user });
-                              }
-                            }
-                          );  
-                        } else {
-                          console.log("updated user: ", { uid: uid, ...user });
-                          result(null, { uid: uid, ...user });
                         }
-                      }
-                    );  
-                  } else {
-                    sql.query(
-                      "UPDATE UserResidentialData SET AddressLine1 = ?, AddressLine2 = ?, AddressLine3 = ?, AddressLine4 = ?, DSDivision = ?, GNDivision = ? WHERE UID = ?",[user.AddressLine1, user.AddressLine2, user.AddressLine3, user.AddressLine4, user.DSDivision, user.GNDivision, uid], (err, res) => {
-                        if (err) {
-                          console.log("error: ", err);
-                          result(null, err);
-                          return;
-                        } else if (res.affectedRows == 0) {
-                          // not found User with the id
-                          var addressData = {
-                            UID: uid,
-                            AddressLine1: user.AddressLine1,
-                            AddressLine2: user.AddressLine2,
-                            AddressLine3: user.AddressLine3,
-                            AddressLine4: user.AddressLine4,
-                            DSDivision: user.DSDivision,
-                            GNDivision: user.GNDivision
-                          };
-                          sql.query(
-                            "INSERT INTO UserResidentialData SET ?",addressData, (err, res) => {
-                              if (err) {
-                                console.log("error: ", err);
-                                result(null, err);
-                                return;
-                              } else if (res.affectedRows == 0) {
-                                // not found User with the id
-                                result({ kind: "not_found" }, null);
-                                console.log("not_found UserResidentialData");
-                                return;
-                              } else {
-                                console.log("updated user: ", { uid: uid, ...user });
-                                result(null, { uid: uid, ...user });
-                              }
-                            });
-                        } else {
-                          console.log("updated user: ", { uid: uid, ...user });
-                          result(null, { uid: uid, ...user });
-                        }
-                      }
-                    );  
-                  }
-                }
-              );  
-            }
-          }
-        );       
-      }
-    }
-  );
+                      });
+                      console.log("updated user: ", { uid: uid, ...user });
+                      result(null, { uid: uid, ...user });
+                    }
+                });
+              }
+          });  
+        }     
+    });
 };
 
 User.validateUser = (uid, isValidated, result) => {

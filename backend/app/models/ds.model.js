@@ -19,6 +19,18 @@ DivisionalSectretariats.getDSByDistrict = (DistrictID, result) => {
     });
 };
 
+DivisionalSectretariats.getDSByDistrictName = (DistrictName, result) => {
+    sql.query("SELECT * FROM DivisionalSecretariats WHERE DistrictID=(SELECT DistrictID FROM Districts WHERE DistrictName=?)", [DistrictName], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        console.log("DivisionalSecretariats list for " + DistrictName + ": ", res);
+        result(null, res);
+    });
+};
+
 DivisionalSectretariats.getAll = (result) => {
     sql.query("SELECT * FROM DivisionalSectretariats", (err, res) => {
         if (err) {
