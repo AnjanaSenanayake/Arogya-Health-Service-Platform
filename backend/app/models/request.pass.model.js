@@ -12,19 +12,30 @@ const RequestCurefewPass = function (requestCurefewPass) {
 };
 
 RequestCurefewPass.requestCurfewPass = (curfewPassRequest, result) => {
-    sql.query("INSERT INTO RequestsForCurfewPass SET ?", curfewPassRequest, (err, res) => {
+    sql.query("SELECT User.UID From User WHERE Name=?", curfewPassRequest.RequestedFor, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
-        }
-
-        if (res.affectedRows == 0) {
+        } else if (res.affectedRows == 0) {
             result({ kind: "failed" }, null);
             return;
+        } else {
+            curfewPassRequest.RequestedFor = res[0].UID;
+            sql.query("INSERT INTO RequestsForCurfewPass SET ?", curfewPassRequest, (err, res) => {
+                if (err) {
+                    console.log("error: ", err);
+                    result(null, err);
+                    return;
+                } else if (res.affectedRows == 0) {
+                    result({ kind: "failed" }, null);
+                    return;
+                }
+                console.log("curfew pass requested: ", curfewPassRequest);
+                result(null, res);
+            }
+            );
         }
-        console.log("curfew pass requested: ", curfewPassRequest);
-        result(null, res);
     }
     );
 };
