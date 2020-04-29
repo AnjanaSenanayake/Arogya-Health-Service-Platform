@@ -82,7 +82,7 @@ User.create = (newUser, result) => {
 };
 
 User.findByNICPP = (nicpp, result) => {
-  sql.query("SELECT * FROM User WHERE NICPP=?",[nicpp], (err, res) => {
+  sql.query("SELECT * FROM User WHERE NICPP=?", [nicpp], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -91,25 +91,26 @@ User.findByNICPP = (nicpp, result) => {
       console.log("found an user: ", res[0]);
       result(null, res[0]);
       return;
-  } else{
-    // not found user with the nicpp
-    result({ kind: "not_found" }, null);
-  }
+    } else {
+      // not found user with the nicpp
+      result({ kind: "not_found" }, null);
+    }
   })
 };
 
 User.findByUID = (uid, result) => {
-  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats,GramaNiladhariDivisions,Districts WHERE User.UID=? AND User.UID = UserContactData.UID AND User.UID = UserResidentialData.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision AND Districts.DistrictID = DivisionalSecretariats.DistrictID", [uid], (err, res) => {
+  sql.query("SELECT * FROM User LEFT JOIN UserContactData ON User.UID = UserContactData.UID LEFT JOIN UserResidentialData ON User.UID = UserResidentialData.UID LEFT JOIN DivisionalSecretariats ON DivisionalSecretariats.DSID = UserResidentialData.DSDivision LEFT JOIN GramaNiladhariDivisions ON GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision LEFT JOIN Districts ON Districts.DistrictID = DivisionalSecretariats.DistrictID WHERE User.UID=?", [uid], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
-    }else if (res.length) {
+    } else if (res.length) {
       var user = res[0];
+      user.UID = uid;
       console.log("found user: ", user);
       result(null, user);
       return;
-    } else{
+    } else {
       // not found user with the nicpp
       result({ kind: "not_found" }, null);
     }
@@ -166,13 +167,13 @@ User.getAllByGNID = (GNID, result) => {
       console.log("found user: ", res);
       result(null, res);
       return;
-    }      
+    }
   });
 };
 
 User.update = (uid, user, result) => {
   sql.query(
-    "UPDATE User SET Name = ?, PrimaryContact = ?, Gender = ?, DOB = ?, MaritalStatus = ?, IsVerified = ? WHERE UID = ?",[user.Name, user.PrimaryContact, user.Gender, user.DOB, user.MaritalStatus, false, uid], (err, res) => {
+    "UPDATE User SET Name = ?, PrimaryContact = ?, Gender = ?, DOB = ?, MaritalStatus = ?, IsVerified = ? WHERE UID = ?", [user.Name, user.PrimaryContact, user.Gender, user.DOB, user.MaritalStatus, false, uid], (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -203,44 +204,44 @@ User.update = (uid, user, result) => {
               console.log("not_found UserContactData");
               return;
             } else {
-                var addressData = {
-                  UID: uid,
-                  AddressLine1: user.AddressLine1,
-                  AddressLine2: user.AddressLine2,
-                  AddressLine3: user.AddressLine3,
-                  AddressLine4: user.AddressLine4,
-                  DSDivision: null,
-                  GNDivision: null
-                };
-                sql.query(
-                  "INSERT INTO UserResidentialData SET ? ON DUPLICATE KEY UPDATE AddressLine1=VALUES(AddressLine1), AddressLine2=VALUES(AddressLine2), AddressLine3=VALUES(AddressLine3), AddressLine4=VALUES(AddressLine4)",addressData, (err, res) => {
-                    if (err) {
-                      console.log("error: ", err);
-                      result(null, err);
-                      return;
-                    } else if (res.affectedRows == 0) {
-                      // not found User with the id
-                      result({ kind: "not_found" }, null);
-                      console.log("not_found UserResidentialData");
-                      return;
-                    } else {
-                      sql.query("UPDATE UserResidentialData SET DSDivision=(SELECT DSID FROM DivisionalSecretariats WHERE DivisionalSecretariatName=?) WHERE UID=?",[user.DSDivision, uid],  (err, res) => {
-                        if(err) {
-                          console.log("error: ", err);
-                        }
-                      });
-                      sql.query("UPDATE UserResidentialData SET GNDivision=(SELECT GNID FROM GramaNiladhariDivisions WHERE GNDivisionName=?) WHERE UID=?",[user.GNDivision, uid], (err, res) => {
-                        if (err) {
-                          console.log("error: ", err);
-                        }
-                      });
-                      console.log("updated user: ", { uid: uid, ...user });
-                      result(null, { uid: uid, ...user });
-                    }
+              var addressData = {
+                UID: uid,
+                AddressLine1: user.AddressLine1,
+                AddressLine2: user.AddressLine2,
+                AddressLine3: user.AddressLine3,
+                AddressLine4: user.AddressLine4,
+                DSDivision: null,
+                GNDivision: null
+              };
+              sql.query(
+                "INSERT INTO UserResidentialData SET ? ON DUPLICATE KEY UPDATE AddressLine1=VALUES(AddressLine1), AddressLine2=VALUES(AddressLine2), AddressLine3=VALUES(AddressLine3), AddressLine4=VALUES(AddressLine4)", addressData, (err, res) => {
+                  if (err) {
+                    console.log("error: ", err);
+                    result(null, err);
+                    return;
+                  } else if (res.affectedRows == 0) {
+                    // not found User with the id
+                    result({ kind: "not_found" }, null);
+                    console.log("not_found UserResidentialData");
+                    return;
+                  } else {
+                    sql.query("UPDATE UserResidentialData SET DSDivision=(SELECT DSID FROM DivisionalSecretariats WHERE DivisionalSecretariatName=?) WHERE UID=?", [user.DSDivision, uid], (err, res) => {
+                      if (err) {
+                        console.log("error: ", err);
+                      }
+                    });
+                    sql.query("UPDATE UserResidentialData SET GNDivision=(SELECT GNID FROM GramaNiladhariDivisions WHERE GNDivisionName=?) WHERE UID=?", [user.GNDivision, uid], (err, res) => {
+                      if (err) {
+                        console.log("error: ", err);
+                      }
+                    });
+                    console.log("updated user: ", { uid: uid, ...user });
+                    result(null, { uid: uid, ...user });
+                  }
                 });
-              }
-          });  
-        }     
+            }
+          });
+      }
     });
 };
 
