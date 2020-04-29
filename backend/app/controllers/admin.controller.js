@@ -1,6 +1,6 @@
+const User = require("../models/user.model.js");
 const Admin = require("../models/admin.model.js");
 const Epidemics = require("../models/epidemics.model.js");
-const EpidemicAlerts = require("../models/epidemic.alerts.model.js");
 const Districts = require("../models/districts.model.js");
 const DivisionalSectretariats = require("../models/ds.model.js");
 const GNDivisions = require("../models/gn.model.js");
@@ -56,7 +56,7 @@ exports.getAllEpidemics = (req, res) => {
 };
 
 // Validate an User identified by the uid in the request
-exports.validateUser = (req, res) => {
+exports.verifyUser = (req, res) => {
   // Validate Request
   if (!req.body) {
     res.status(400).send({
@@ -66,20 +66,46 @@ exports.validateUser = (req, res) => {
 
   console.log(req.body);
 
-  User.validateUser(req.body.uid, req.body.validated,
-    (err, result) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found User with uid ${req.body.uid}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating User with uid " + req.body.uid
-          });
-        }
-      } else res.send(result);
-    }
+  User.verifyUser(req.body, (err, result) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found User with uid ${req.body.uid}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error updating User with uid " + req.body.uid
+        });
+      }
+    } else res.send(result);
+  }
+  );
+};
+
+// delete an User identified by the uid in the request
+exports.deleteUser = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  console.log(req.body);
+
+  User.delete(req.body.uid, (err, result) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found User with uid ${req.body.uid}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error deleting User with uid " + req.body.uid
+        });
+      }
+    } else res.send(result);
+  }
   );
 };
 

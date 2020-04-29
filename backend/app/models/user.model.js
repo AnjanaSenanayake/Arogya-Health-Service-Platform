@@ -245,31 +245,26 @@ User.update = (uid, user, result) => {
     });
 };
 
-User.validateUser = (uid, isValidated, result) => {
-  sql.query(
-    "UPDATE User SET IsValidated = ? WHERE UID = ?",
-    [isValidated, uid],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-
-      if (res.affectedRows == 0) {
-        // not found User with the uid
-        result({ kind: "not_found" }, null);
-        return;
-      }
-
-      console.log("validated user: ", uid);
-      result(null, { UID: uid, validated: isValidated });
+User.verifyUser = (req, result) => {
+  sql.query("UPDATE User SET IsVerified = ? WHERE UID = ?", [req.isVerified, req.uid], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
     }
+    if (res.affectedRows == 0) {
+      // not found User with the uid
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    console.log("verified user: ", req.uid);
+    result(null, { UID: req.uid, IsVerified: req.isVerified });
+  }
   );
 };
 
-User.remove = (id, result) => {
-  sql.query("DELETE FROM User WHERE id = ?", nicpp, (err, res) => {
+User.delete = (UID, result) => {
+  sql.query("DELETE FROM User WHERE UID = ?", [UID], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -282,7 +277,7 @@ User.remove = (id, result) => {
       return;
     }
 
-    console.log("deleted user with nicpp: ", nicpp);
+    console.log("deleted user with UID: ", UID);
     result(null, res);
   });
 };
