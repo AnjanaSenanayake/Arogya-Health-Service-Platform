@@ -41,7 +41,7 @@ RequestCurefewPass.requestCurfewPass = (curfewPassRequest, result) => {
 };
 
 RequestCurefewPass.getAllPassRequestsByUser = (uid, result) => {
-    sql.query("Select * FROM User.Name, RequestsForCurfewPass WHERE RequestedBy=? AND User.UID = RequestsForCurfewPass.RequestedFor", [uid], (err, res) => {
+    sql.query("Select RequestsForCurfewPass.*, User.Name FROM User, RequestsForCurfewPass WHERE RequestedBy=? AND User.UID = RequestsForCurfewPass.RequestedFor", [uid], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
