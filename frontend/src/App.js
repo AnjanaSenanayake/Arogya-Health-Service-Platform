@@ -16,11 +16,13 @@ function App() {
   useEffect(() => {
     document.title = "Web App - Administrators";
     const token = localStorage.getItem("token");
+    
     // console.log(,token)
-    if(token != 'null'){
+    if(token != 'null' && token !== null){
+      console.log("1", token,loginStates);
       setloginStates(true)
     }
-    console.log("Token", token);
+    console.log("2", token,loginStates);
     // setloginStates(token !== "null");
   }, []);
 
@@ -40,6 +42,7 @@ function App() {
       </div>
     )
   } if (loginStates == true) {
+    console.log("2", token,loginStates);
     //loged
     return (
       <WebApp
