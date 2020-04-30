@@ -4,6 +4,7 @@ const Epidemics = require("../models/epidemics.model.js");
 const Districts = require("../models/districts.model.js");
 const DivisionalSectretariats = require("../models/ds.model.js");
 const GNDivisions = require("../models/gn.model.js");
+const RequestCurfewPass = require("../models/request.pass.model.js");
 const MESSAGES = require("../utils/messages.js");
 
 // Get Admin data from admin AID
@@ -77,7 +78,15 @@ exports.verifyUser = (req, res) => {
           message: "Error updating User with uid " + req.body.uid
         });
       }
-    } else res.send(result);
+    } else {
+      res.send(result);
+      listnerPayload = {
+        'uid': req.body.uid,
+        'isVerified': req.body.isVerified
+      };
+      const io = req.app.locals.io;
+      io.emit('verifyUser', listnerPayload);
+    }
   }
   );
 };
@@ -150,3 +159,22 @@ exports.getGNByDivision = (req, res) => {
     }
   });
 };
+
+// Approve or deny request pass
+exports.requestedPassApproveDeny = (req, res) => {
+  RequestCurfewPass.requestedPassApproveDeny(req.body.requestID, req.body.status, (err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while approving/denying request pass" });
+      return;
+    }
+    else {
+      res.send(result);
+      listnerPayload = {
+        'status': req.body.status
+      };
+      const io = req.app.locals.io;
+      io.emit('passApproval', listnerPayload);
+      return;
+    }
+  });
+}

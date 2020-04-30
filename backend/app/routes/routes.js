@@ -83,6 +83,10 @@ module.exports = app => {
 
   app.route('/deleteUser')
     .delete(Admin.deleteUser);
+
+  app.route('/requestedPassApproveDeny')
+    .post(Admin.requestedPassApproveDeny);
+    
   // // Delete a user with nicpp
   // app.delete("/user/:nicpp", user.delete);
 

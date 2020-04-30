@@ -94,4 +94,22 @@ RequestCurefewPass.cancelRequestedPass = (requestID, result) => {
     );
 };
 
+RequestCurefewPass.requestedPassApproveDeny = (requestID, status, result) => {
+    sql.query("UPDATE RequestsForCurfewPass SET Status=? WHERE RequestID=?", [status, requestID], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        if (res.affectedRows == 0) {
+            result({ kind: "failed" }, null);
+            return;
+        }
+        console.log("curfew pass deleted: ", requestID);
+        result(null, res);
+    }
+    );
+};
+
 module.exports = RequestCurefewPass;
