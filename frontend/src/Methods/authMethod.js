@@ -62,7 +62,7 @@ export async  function loginRequest(nic,pw,setloginStates,setUserData,setFailedM
         })
 }
 
-export async  function registerRequest(name,nic,posi,phone,access,ds,gs,pw){
+export async  function registerRequest(name,nic,posi,phone,access,ds,gs,pw,setResponse){
   console.log(nic+' '+pw)
   const qs = require('querystring');
   const url = getIp()+'adminRegister';
@@ -87,6 +87,7 @@ export async  function registerRequest(name,nic,posi,phone,access,ds,gs,pw){
       .then((result) => {
         // Do somthing
           console.log(result)
+          setResponse(result);
           // if(result.data.PasswordHash != null){
           //     localStorage.setItem('token', result.data);
           //     console.log(result.data)
@@ -104,6 +105,7 @@ export async  function registerRequest(name,nic,posi,phone,access,ds,gs,pw){
 
 // Template for auth request
 export async function authRequest(url='',requestBody={},setState){
+
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
