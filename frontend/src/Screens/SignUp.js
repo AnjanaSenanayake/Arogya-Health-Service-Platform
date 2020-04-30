@@ -92,7 +92,7 @@ export function SignUp(props) {
     return (
       <div>
         <div className="container">
-          <h1 className="mt-4">Register new account</h1>
+          {/* <h1 className="mt-4">Register new account</h1> */}
           <Row>
             <Col></Col>
             <Col xs={6}>

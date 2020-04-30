@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Row, Col, Container, Form, Input,Modal } from "react-bootstrap";
 import { loginRequest } from "./Methods/authMethod";
 import { WebApp } from "./Screens/HomeScreen";
-
+import {SignUp} from './Screens/SignUp'
 function App() {
   const [userData, setUserData] = React.useState(null);
   const [loginStates, setloginStates] = React.useState(null);
@@ -73,6 +73,7 @@ function LoginForm(props) {
   const [smShow,setSmShow] = React.useState(false);
   const [msg,setMsg] = React.useState("");
   const [help,setHelp] = React.useState(false);
+  
   function handleNic(e) {
     setNic(e.target.value);
   }
@@ -152,7 +153,7 @@ function LoginForm(props) {
       <Row>
         <Col>
         <Button type="button" size="sm" variant="outline-secondary" onClick={()=>{setHelp(true)}}>
-            Help me!! 
+            Creacte Acount
           </Button>
         </Col>
       </Row>
@@ -172,21 +173,26 @@ function LoginForm(props) {
           </Modal>
 
           <Modal
-           
+             size="lg"
             show={help}
             onHide={() => setHelp(false)}
             // aria-labelledby="example-modal-sizes-title-sm"
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-md">
-                You are in Admin / Management web of qwert qwrr
+                Create an Acount
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>Insert your login infomation, for reset your password. please contact your organization Admin</Modal.Body>
+            <Modal.Body>
+            <SignUp setNavTitle={setNave} />
+            </Modal.Body>
           </Modal>
 
     </Container>
   );
 }
 
+function setNave(value){
+
+}
 export default App;
