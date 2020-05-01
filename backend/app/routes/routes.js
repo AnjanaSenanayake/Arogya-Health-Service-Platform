@@ -29,6 +29,14 @@ module.exports = app => {
   app.route('/getAllChildUsers')
     .post(User.getAllChildUsers);
 
+  // Retrieve all users  
+  app.route('/getAllUsers')
+    .post(User.getAllUsers);
+
+  // Retrieve users with DSID  
+  app.route('/getUsersByDSID')
+    .post(User.getUsersByDSID);
+
   // Retrieve users with GNID  
   app.route('/getUsersByGNID')
     .post(User.getUsersByGNID);
@@ -86,7 +94,7 @@ module.exports = app => {
 
   app.route('/requestedPassApproveDeny')
     .post(Admin.requestedPassApproveDeny);
-    
+
   // // Delete a user with nicpp
   // app.delete("/user/:nicpp", user.delete);
 

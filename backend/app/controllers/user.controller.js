@@ -64,13 +64,26 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Users from the resultbase.
-exports.findAll = (req, res) => {
+exports.getAllUsers = (req, res) => {
   User.getAll((err, result) => {
     if (err) {
       res.status(500).send({ message: err.message || "Some error occurred while retrieving users." });
       return;
     }
     else {
+      res.send(result);
+      return;
+    }
+  });
+};
+
+// Retrieve Users by DSID from the resultbase.
+exports.getUsersByDSID = (req, res) => {
+  User.getAllByDSID(req.body.DSID, (err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while retrieving users." });
+      return;
+    } else {
       res.send(result);
       return;
     }

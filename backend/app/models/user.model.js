@@ -145,7 +145,7 @@ User.getAllChildUsers = (uid, result) => {
 };
 
 User.getAll = result => {
-  sql.query("SELECT * FROM User", (err, res) => {
+  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName WHERE DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -157,8 +157,22 @@ User.getAll = result => {
   });
 };
 
+User.getAllByDSID = (DSID, result) => {
+  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName WHERE UserResidentialData.DSDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", [DSID], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    } else if (res.length) {
+      console.log("found user: ", res);
+      result(null, res);
+      return;
+    }
+  });
+};
+
 User.getAllByGNID = (GNID, result) => {
-  sql.query("SELECT * FROM User,UserContactData,UserResidentialData WHERE UserResidentialData.GNDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID", [GNID], (err, res) => {
+  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName WHERE UserResidentialData.GNDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", [GNID], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
