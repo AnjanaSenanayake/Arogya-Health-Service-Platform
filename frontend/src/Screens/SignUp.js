@@ -226,6 +226,7 @@ export function SignUp(props) {
             <select
               className="form-control"
               value={districtid}
+              disabled={access == 0}
               onChange={handleDistrict}
             >
               <option value="0">Select District</option>
