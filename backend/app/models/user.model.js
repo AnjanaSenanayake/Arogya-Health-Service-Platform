@@ -145,7 +145,7 @@ User.getAllChildUsers = (uid, result) => {
 };
 
 User.getAll = result => {
-  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName WHERE DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", (err, res) => {
+  sql.query("SELECT User.*,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName FROM User,UserContactData,UserResidentialData,DivisionalSecretariats,GramaNiladhariDivisions WHERE DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -158,7 +158,7 @@ User.getAll = result => {
 };
 
 User.getAllByDSID = (DSID, result) => {
-  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName WHERE UserResidentialData.DSDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", [DSID], (err, res) => {
+  sql.query("SELECT User.*,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName FROM User,UserContactData,UserResidentialData,DivisionalSecretariats,GramaNiladhariDivisions WHERE UserResidentialData.DSDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", [DSID], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
