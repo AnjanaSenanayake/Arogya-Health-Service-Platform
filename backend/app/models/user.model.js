@@ -172,7 +172,7 @@ User.getAllByDSID = (DSID, result) => {
 };
 
 User.getAllByGNID = (GNID, result) => {
-  sql.query("SELECT * FROM User,UserContactData,UserResidentialData,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName WHERE UserResidentialData.GNDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", [GNID], (err, res) => {
+  sql.query("SELECT  User.*,DivisionalSecretariats.DivisionalSecretariatsName,GramaNiladhariDivisions.GNDivisionName FROM User,UserContactData,UserResidentialData,DivisionalSecretariats,GramaNiladhariDivisions WHERE UserResidentialData.GNDivision=? AND UserResidentialData.UID = UserContactData.UID AND UserResidentialData.UID = User.UID AND DivisionalSecretariats.DSID = UserResidentialData.DSDivision AND GramaNiladhariDivisions.GNID = UserResidentialData.GNDivision", [GNID], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
