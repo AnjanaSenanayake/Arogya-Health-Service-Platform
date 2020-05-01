@@ -17,8 +17,8 @@ import {
 
 export function SignUp(props) {
   props.setNavTitle("SignUp");
-  const [name, setName] = React.useState();
-  const [nic, setNic] = React.useState();
+  const [name, setName] = React.useState("");
+  const [nic, setNic] = React.useState("");
   const [posi, setPosi] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [access, setAccess] = React.useState("");
@@ -32,8 +32,8 @@ export function SignUp(props) {
   const [districtid, setDistrictId] = React.useState();
   const [refresh, dorefresh] = React.useState();
   const [dsdata, setDsData] = React.useState();
-  const [gndata,setGnData] = React.useState();
-  const [response,setResponse] = React.useState();
+  const [gndata, setGnData] = React.useState();
+  const [response, setResponse] = React.useState();
   var data;
 
   useEffect(() => {
@@ -59,10 +59,11 @@ export function SignUp(props) {
 
   useEffect(() => {
     console.log(response?.data);
-    setMsg(response?.data);
+    if (response?.data) {
+      setMsg(response?.data);
       setSmShow(true);
-  }, [response])
-
+    }
+  }, [response]);
 
   function handleName(e) {
     setName(e.target.value);
@@ -121,11 +122,11 @@ export function SignUp(props) {
     if (pw != cpw) {
       setMsg("Password is not matching");
       setSmShow(true);
-    } else if (name == "" || nic == "") {
+    } else if (name == "" || nic == "" || posi == "" || access == "") {
       setMsg("Please fill the required fields");
       setSmShow(true);
     } else {
-      registerRequest(name, nic, posi, phone, access, ds, gs, pw,setResponse);
+      registerRequest(name, nic, posi, phone, access, ds, gs, pw, setResponse);
     }
   }
 
@@ -227,7 +228,7 @@ export function SignUp(props) {
               value={districtid}
               onChange={handleDistrict}
             >
-              <option value='0' >Select District</option>
+              <option value="0">Select District</option>
               {districtSet?.data.map((team) => (
                 <option key={team.DistrictID} value={team.DistrictID}>
                   {team.DistrictName}
@@ -249,7 +250,7 @@ export function SignUp(props) {
               onChange={handleDs}
               value={ds}
             >
-              <option value='0' >Select DS Division</option>
+              <option value="0">Select DS Division</option>
               {dsdata?.data.map((team) => (
                 <option key={team.DSID} value={team.DSID}>
                   {team.DivisionalSecretariatName}
@@ -271,7 +272,7 @@ export function SignUp(props) {
               onChange={handleGs}
               value={gs}
             >
-              <option value='0' >Select GN Division</option>
+              <option value="0">Select GN Division</option>
               {gndata?.data.map((team) => (
                 <option key={team.GNID} value={team.GNID}>
                   {team.GNDivisionName}
