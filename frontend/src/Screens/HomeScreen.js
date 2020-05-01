@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { registerRequest } from "../Methods/authMethod";
 import { logout } from "../Methods/authMethod";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import {SureModel} from '../Screens/PopupMsg'
 import { SignUp } from "./SignUp";
 import { Users } from "./DataGrid";
 
@@ -19,7 +19,7 @@ import {
 } from "react-bootstrap";
 export function WebApp(props) {
   const [navTitle, setNavTitle] = React.useState();
-
+  const [popupSure, setPopupSure] = React.useState(false);
   useEffect(() => {
     document.title = "Admin-" + navTitle;
 
@@ -29,6 +29,8 @@ export function WebApp(props) {
   function logoutHandle() {
     logout(props.setloginStates);
   }
+
+
   return (
     <Router>
       <div>
@@ -97,10 +99,19 @@ export function WebApp(props) {
                 size="sm"
                 variant="outline-secondary"
                 className="nav-item"
-                onClick={logoutHandle}
+                onClick={()=>{setPopupSure(true)}}
               >
                 Sign Out
               </Button>
+
+              <SureModel
+        yes={logoutHandle}
+        title={"Need to Logout?"}
+        okName={"Yes"}
+        body={"Bye!!"}
+        show={popupSure}
+        setShow={setPopupSure}
+      />
             </div>
           </div>
         </nav>

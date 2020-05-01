@@ -18,20 +18,41 @@ import {
   thead,
   Card,
   Badge,
+  Spinner,
+  Jumbotron,
 } from "react-bootstrap";
+import { SureModel } from "./PopupMsg";
 
 function Poper(props) {
   const [show, setShow] = React.useState(false);
-
+  const [popupSure, setPopupSure] = React.useState(false);
+  const [popupVerify, setPopupVerify] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  function handleVerify(user) {}
+  function handleVerify() {}
 
-  function handleDelete(user) {}
-  
+  function handleDelete() {}
+
   return (
     <>
+      <SureModel
+        yes={handleDelete}
+        title={"Are You Sure?"}
+        okName={"Delete"}
+        body={"You are going to delete " + props.data?.Name + "'s account."}
+        show={popupSure}
+        setShow={setPopupSure}
+      />
+      <SureModel
+        yes={handleVerify}
+        title={"Are You Sure?"}
+        okName={"Verify"}
+        body={"You are going to Verify " + props.data?.Name + "'s account."}
+        show={popupVerify}
+        setShow={setPopupVerify}
+      />
+
       <Button variant="primary" onClick={handleShow}>
         View
       </Button>
@@ -85,9 +106,10 @@ function Poper(props) {
             <Card.Footer>
               {props.data?.IsVerified == 0 ? (
                 <Button
+                  style={{ margin: 10 }}
                   variant="warning"
                   onClick={() => {
-                    handleVerify(props.data);
+                    setPopupVerify(true);
                   }}
                 >
                   Verify
@@ -106,6 +128,7 @@ function Poper(props) {
               <Button
                 variant="danger"
                 onClick={() => {
+                  setPopupSure(true);
                   handleDelete(props.data);
                 }}
               >
@@ -193,34 +216,30 @@ export function Users(props) {
       <br></br>
       <br></br>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>DSDivision</th>
-            <th>Gender</th>
-            <th>IsVerified</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        {/* <tbody>{items}</tbody>  GNDivision: "1"
+      {/* <tbody>{items}</tbody>  GNDivision: "1"
 DSDivision*/}
-        {dataSet?.data == null ? (
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Loading</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        ) : (
-          items
-        )}
-      </Table>
+      {dataSet?.data == null ? (
+        <Container style={{ alignItems: "center" }}>
+          <h1>
+            <Spinner size="lg" animation="border" variant="danger" />
+          </h1>
+        </Container>
+      ) : (
+        <Table  size="sm" striped responsive hover>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Address</th>
+              <th>DSDivision</th>
+              <th>Gender</th>
+              <th>IsVerified</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          {items}
+        </Table>
+      )}
     </div>
   );
 }
