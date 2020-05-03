@@ -94,6 +94,60 @@ RequestCurefewPass.cancelRequestedPass = (requestID, result) => {
     );
 };
 
+RequestCurefewPass.getAllPassRequests = (result) => {
+    sql.query("Select RFCP.*,User.Name AS RequestedForName,User.NICPP AS RequestedForNICPP,(SELECT User.Name FROM User,RequestsForCurfewPass WHERE RequestedBy = UID  AND RFCP.RequestID = RequestID) AS RequestedByName, (SELECT User.NICPP FROM User,RequestsForCurfewPass WHERE RequestedBy = UID  AND RFCP.RequestID = RequestID) AS RequestedByNICPP FROM RequestsForCurfewPass AS RFCP,User WHERE RFCP.RequestedFor = User.UID", (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        if (res.affectedRows == 0) {
+            result({ kind: "failed" }, null);
+            return;
+        }
+        console.log("curfew pass list: ", res);
+        result(null, res);
+    }
+    );
+};
+
+RequestCurefewPass.getAllPassRequestsByDSID = (DSID, result) => {
+    sql.query("Select RFCP.*,User.Name AS RequestedForName,User.NICPP AS RequestedForNICPP,(SELECT User.Name FROM User,RequestsForCurfewPass WHERE RequestedBy = UID  AND RFCP.RequestID = RequestID) AS RequestedByName, (SELECT User.NICPP FROM User,RequestsForCurfewPass WHERE RequestedBy = UID  AND RFCP.RequestID = RequestID) AS RequestedByNICPP FROM RequestsForCurfewPass AS RFCP,User,UserResidentialData AS URD WHERE RFCP.RequestedFor = User.UID AND User.UID = URD.UID AND URD.DSDivision=?",[DSID], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        if (res.affectedRows == 0) {
+            result({ kind: "failed" }, null);
+            return;
+        }
+        console.log("curfew pass list: ", res);
+        result(null, res);
+    }
+    );
+};
+
+RequestCurefewPass.getAllPassRequestsByGNID = (GNID, result) => {
+    sql.query("Select RFCP.*,User.Name AS RequestedForName,User.NICPP AS RequestedForNICPP,(SELECT User.Name FROM User,RequestsForCurfewPass WHERE RequestedBy = UID  AND RFCP.RequestID = RequestID) AS RequestedByName, (SELECT User.NICPP FROM User,RequestsForCurfewPass WHERE RequestedBy = UID  AND RFCP.RequestID = RequestID) AS RequestedByNICPP FROM RequestsForCurfewPass AS RFCP,User,UserResidentialData AS URD WHERE RFCP.RequestedFor = User.UID AND User.UID = URD.UID AND URD.GNDivision=?",[GNID], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        if (res.affectedRows == 0) {
+            result({ kind: "failed" }, null);
+            return;
+        }
+        console.log("curfew pass list: ", res);
+        result(null, res);
+    }
+    );
+};
+
 RequestCurefewPass.requestedPassApproveDeny = (requestID, status, result) => {
     sql.query("UPDATE RequestsForCurfewPass SET Status=? WHERE RequestID=?", [status, requestID], (err, res) => {
         if (err) {
@@ -106,7 +160,7 @@ RequestCurefewPass.requestedPassApproveDeny = (requestID, status, result) => {
             result({ kind: "failed" }, null);
             return;
         }
-        console.log("curfew pass deleted: ", requestID);
+        console.log("curfew pass approve/deny: ", requestID);
         result(null, res);
     }
     );

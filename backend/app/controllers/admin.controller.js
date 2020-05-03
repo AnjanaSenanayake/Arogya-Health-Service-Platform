@@ -178,3 +178,54 @@ exports.requestedPassApproveDeny = (req, res) => {
     }
   });
 }
+
+// Get all passes
+exports.getAllPassRequests = (req, res) => {
+  RequestCurfewPass.getAllPassRequests((err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while retrieving request passes" });
+      return;
+    }
+    else {
+      res.send(result);
+      listnerPayload = {
+        'status': req.body.status
+      };
+      return;
+    }
+  });
+}
+
+// Get all passes by DSID
+exports.getAllPassRequestsByDSID = (req, res) => {
+  RequestCurfewPass.getAllPassRequestsByDSID(req.body.DSID,(err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while retrieving request passes" });
+      return;
+    }
+    else {
+      res.send(result);
+      listnerPayload = {
+        'status': req.body.status
+      };
+      return;
+    }
+  });
+}
+
+// Get all passes by GNID
+exports.getAllPassRequestsByGNID = (req, res) => {
+  RequestCurfewPass.getAllPassRequestsByGNID(req.body.GNID,(err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while retrieving request passes" });
+      return;
+    }
+    else {
+      res.send(result);
+      listnerPayload = {
+        'status': req.body.status
+      };
+      return;
+    }
+  });
+}

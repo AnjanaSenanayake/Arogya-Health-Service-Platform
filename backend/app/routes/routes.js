@@ -95,9 +95,12 @@ module.exports = app => {
   app.route('/requestedPassApproveDeny')
     .post(Admin.requestedPassApproveDeny);
 
-  // // Delete a user with nicpp
-  // app.delete("/user/:nicpp", user.delete);
+  app.route('/getAllPassRequests')
+    .post(Admin.getAllPassRequests);
 
-  // // Create a new user
-  // app.delete("/user", user.deleteAll);
+  app.route('/getAllPassRequestsByDSID')
+    .post(Admin.getAllPassRequestsByDSID);
+
+  app.route('/getAllPassRequestsByGNID')
+    .post(Admin.getAllPassRequestsByGNID);
 };
