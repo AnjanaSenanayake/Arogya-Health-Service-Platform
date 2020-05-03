@@ -148,8 +148,8 @@ RequestCurefewPass.getAllPassRequestsByGNID = (GNID, result) => {
     );
 };
 
-RequestCurefewPass.requestedPassApproveDeny = (requestID, status, result) => {
-    sql.query("UPDATE RequestsForCurfewPass SET Status=? WHERE RequestID=?", [status, requestID], (err, res) => {
+RequestCurefewPass.requestedPassApproveDeny = (data, result) => {
+    sql.query("UPDATE RequestsForCurfewPass SET Status=?, InspectedBy=?, InspectedOn=? WHERE RequestID=?", [data.status, data.AID, data.date, data.requestID], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -160,7 +160,7 @@ RequestCurefewPass.requestedPassApproveDeny = (requestID, status, result) => {
             result({ kind: "failed" }, null);
             return;
         }
-        console.log("curfew pass approve/deny: ", requestID);
+        console.log("curfew pass approve/deny: ", data.requestID);
         result(null, res);
     }
     );

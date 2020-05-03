@@ -162,7 +162,7 @@ exports.getGNByDivision = (req, res) => {
 
 // Approve or deny request pass
 exports.requestedPassApproveDeny = (req, res) => {
-  RequestCurfewPass.requestedPassApproveDeny(req.body.requestID, req.body.status, (err, result) => {
+  RequestCurfewPass.requestedPassApproveDeny(req.body, (err, result) => {
     if (err) {
       res.status(500).send({ message: err.message || "Some error occurred while approving/denying request pass" });
       return;
