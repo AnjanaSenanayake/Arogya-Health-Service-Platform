@@ -15,6 +15,8 @@ import {
   Modal,
 } from "react-bootstrap";
 
+import { SureModel } from "./PopupMsg";
+
 export function SignUp(props) {
   props.setNavTitle("SignUp");
   const [name, setName] = React.useState("");
@@ -327,19 +329,16 @@ export function SignUp(props) {
           <Col></Col>
         </Row>
 
-        <Modal
-          size="sm"
-          show={smShow}
-          onHide={() => setSmShow(false)}
-          aria-labelledby="example-modal-sizes-title-sm"
-        >
-          <Modal.Header closeButton>
-            <Modal.Title id="example-modal-sizes-title-sm">
-              Attention
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{msg}</Modal.Body>
-        </Modal>
+
+
+        <SureModel
+        
+        title={"Attention"}
+        okName={"OK"}
+        body={msg}
+        show={smShow}
+        setShow={setSmShow}
+      />
       </div>
     </div>
   );

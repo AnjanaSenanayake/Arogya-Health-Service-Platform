@@ -7,7 +7,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { SureModel } from "../Screens/PopupMsg";
 import { SignUp } from "./SignUp";
 import { Users } from "./DataGrid";
+<<<<<<< HEAD
 import {Curfew} from "./CurfewPassGrid"
+=======
+import {CurfewPasses } from "./CurfewPasses";
+
+>>>>>>> 3add34e79870ba44e4377c7a348676eae1788363
 import {
   Button,
   Row,
@@ -92,6 +97,7 @@ export function WebApp(props) {
                     Sign Up
                   </Link>
                 </li>
+<<<<<<< HEAD
 
                 <li className="nav-item">
                   <Link
@@ -101,6 +107,16 @@ export function WebApp(props) {
                     to="/curfew-pass"
                   >
                     Curfew Pass
+=======
+                <li className="nav-item">
+                  <Link
+                    className={
+                      navTitle == "CurfewPasses" ? "nav-link h5" : "nav-link"
+                    }
+                    to="/curfewpass"
+                  >
+                    Curfew Pass Requests
+>>>>>>> 3add34e79870ba44e4377c7a348676eae1788363
                   </Link>
                 </li>
               </ul>
@@ -143,6 +159,9 @@ export function WebApp(props) {
             <Route path="/users">
               <Users setNavTitle={setNavTitle} />
             </Route>
+            <Route path="/curfewpass">
+              <CurfewPasses setNavTitle={setNavTitle} />
+            </Route>
             <Route path="/">
               <Home setNavTitle={setNavTitle} />
             </Route>
@@ -168,6 +187,7 @@ function Home(props) {
     </div>
   );
 }
+
 
 function About(props) {
   props.setNavTitle("About");
