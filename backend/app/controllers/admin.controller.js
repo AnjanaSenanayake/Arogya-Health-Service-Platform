@@ -222,11 +222,39 @@ exports.getAllPassRequestsByGNID = (req, res) => {
   });
 }
 
+// Get all epidemic alerts pending for approve/deny
+exports.getEpidemicAlertsPending = (req, res) => {
+  EpidemicAlerts.getEpidemicAlertsPending((err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while retrieving epidemic alerts pending" });
+      return;
+    }
+    else {
+      res.send(result);
+      return;
+    }
+  });
+}
+
+// Get all epidemic alerts approved
+exports.getEpidemicAlertsApproved = (req, res) => {
+  EpidemicAlerts.getEpidemicAlertsApproved((err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while retrieving epidemic alerts approved" });
+      return;
+    }
+    else {
+      res.send(result);
+      return;
+    }
+  });
+}
+
 // Epidemic alert approve deny
 exports.epidemicAlertApproveDeny = (req, res) => {
   EpidemicAlerts.epidemicAlertApproveDeny(req.body, (err, result) => {
     if (err) {
-      res.status(500).send({ message: err.message || "Some error occurred while epidemic alert approve deny" });
+      res.status(500).send({ message: err.message || "Some error occurred while epidemic alert approve/deny" });
       return;
     }
     else {

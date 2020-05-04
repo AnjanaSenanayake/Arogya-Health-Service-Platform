@@ -106,4 +106,10 @@ module.exports = app => {
 
   app.route('/epidemicAlertApproveDeny')
     .post(Admin.epidemicAlertApproveDeny);
+
+  app.route('/getEpidemicAlertsPending')
+    .post(Admin.getEpidemicAlertsPending);
+
+  app.route('/getEpidemicAlertsApproved')
+    .post(Admin.getEpidemicAlertsApproved);
 };
