@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { registerRequest } from "../Methods/authMethod";
 import { logout } from "../Methods/authMethod";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {SureModel} from '../Screens/PopupMsg'
+import { SureModel } from "../Screens/PopupMsg";
 import { SignUp } from "./SignUp";
 import { Users } from "./DataGrid";
-
+import {Curfew} from "./CurfewPassGrid"
 import {
   Button,
   Row,
@@ -29,7 +29,6 @@ export function WebApp(props) {
   function logoutHandle() {
     logout(props.setloginStates);
   }
-
 
   return (
     <Router>
@@ -93,29 +92,42 @@ export function WebApp(props) {
                     Sign Up
                   </Link>
                 </li>
+
+                <li className="nav-item">
+                  <Link
+                    className={
+                      navTitle == "Curfew Pass" ? "nav-link h5" : "nav-link"
+                    }
+                    to="/curfew-pass"
+                  >
+                    Curfew Pass
+                  </Link>
+                </li>
               </ul>
 
               <Button
                 size="sm"
                 variant="outline-secondary"
                 className="nav-item"
-                onClick={()=>{setPopupSure(true)}}
+                onClick={() => {
+                  setPopupSure(true);
+                }}
               >
                 Sign Out
               </Button>
 
               <SureModel
-        yes={logoutHandle}
-        title={"Need to Logout?"}
-        okName={"Yes"}
-        body={"Bye!!"}
-        show={popupSure}
-        setShow={setPopupSure}
-      />
+                yes={logoutHandle}
+                title={"Need to Logout?"}
+                okName={"Yes"}
+                body={"Bye!!"}
+                show={popupSure}
+                setShow={setPopupSure}
+              />
             </div>
           </div>
         </nav>
-        <div style={{padding:50}}>
+        <div style={{ padding: 50 }}>
           <Switch>
             <Route path="/signup">
               <SignUp setNavTitle={setNavTitle} />
@@ -123,6 +135,11 @@ export function WebApp(props) {
             <Route path="/about">
               <About setNavTitle={setNavTitle} />
             </Route>
+
+            <Route path="/curfew-pass">
+              <Curfew setNavTitle={setNavTitle} />
+            </Route>
+
             <Route path="/users">
               <Users setNavTitle={setNavTitle} />
             </Route>
@@ -167,3 +184,5 @@ function About(props) {
     </div>
   );
 }
+
+

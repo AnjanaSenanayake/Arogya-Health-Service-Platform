@@ -22,6 +22,20 @@ import {
   Jumbotron,
 } from "react-bootstrap";
 import { SureModel } from "./PopupMsg";
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 
 function Poper(props) {
   const [show, setShow] = React.useState(false);
@@ -76,48 +90,38 @@ function Poper(props) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{props.data?.Name}</Modal.Title>
+          <Modal.Title>{props.data?.Reason}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Card style={{ padding: 10 }}>
             {/* <Card.Title>{props.data?.Name}</Card.Title> */}
             <Card.Text>
-              NIC: {props.data?.NICPP}
+              For: {props.data?.RequestedForName +'('+ props.data?.RequestedForNICPP+')'}
               <br />
-              DOB: {props.data?.DOB}
+              By: {props.data?.RequestedByName +'('+ props.data?.RequestedByNICPP +')'}
               <br />
-              PrimaryContact: {props.data?.PrimaryContact}
+              WhereTo: {props.data?.WhereTo}
               <br />
-              Address:{" "}
-              {props.data?.AddressLine1 +
-                ", " +
-                props.data?.AddressLine2 +
-                ", " +
-                props.data?.AddressLine3 +
-                ", " +
-                props.data?.AddressLine4}
+              ValidFrom: {props.data?.ValidFrom}
               <br />
-              GNDivision: {props.data?.GNDivision}
               <br />
-              DSDivision: {props.data?.DSDivision}
+              ValidFrom: {props.data?.ValidTo}
               <br />
-              Gender: {props.data?.Gender}
-              <br />
-              MaritalStatus: {props.data?.MaritalStatus}
-              <br />
-              IsVerified:{" "}
-              {props.data?.IsVerified == 0 ? (
-                <Badge size="sm" variant="warning">
-                  No
+
+             
+              
+              
+              Status:
+              {props.data?.Status == 'DENIED'? (
+                <Badge size="sm" variant="danger">
+                  {props.data?.Status }
                 </Badge>
               ) : (
-                <Badge size="sm" variant="danger">
-                  Yes
+                <Badge size="sm" variant="warning">
+                  {props.data?.Status }
                 </Badge>
               )}
-              <br />
-              UID: {props.data?.UID}
-              <br />
+             
             </Card.Text>
 
             <Card.Footer>
@@ -164,7 +168,7 @@ function Poper(props) {
   );
 }
 
-export function Users(props) {
+export function Curfew(props) {
   const [refresh, dorefresh] = React.useState();
   const [dataSet, setDataSet] = React.useState();
   const [items, setItems] = React.useState();
@@ -173,13 +177,11 @@ export function Users(props) {
     console.log(props);
   }
 
-  props.setNavTitle("User");
+  props.setNavTitle("Curfew Pass");
 
   useEffect(() => {
     document.title = "Admin-" + props.navTitle;
-    console.log(props);
-    authRequest("getUsersByGNID", { GNID: 1 }, setDataSet);
-    // authRequest("getUserByUID",{},setDataSet);
+    authRequest("getAllPassRequests", { GNID: 1 }, setDataSet);
   }, [refresh]);
 
   var itemsObj = [];
@@ -195,28 +197,22 @@ export function Users(props) {
         return (
           <tr key={data.Name}>
             <th>#</th>
-            <td>{data?.Name}</td>
+            <td>{data?.RequestedForName}</td>
             <td>
-              {data?.AddressLine1 +
-                ", " +
-                data?.AddressLine2 +
-                ", " +
-                data?.AddressLine3 +
-                ", " +
-                data?.AddressLine4}
+              {data?.RequestedByName}
             </td>
-            <td>{data?.DSDivision}</td>
-            <td>{data?.Gender}</td>
+            <td>{data?.Reason}</td>
+            <td>{data?.WhereTo}</td>
 
             <td>
-              {data?.IsVerified == 0 ? (
-                <Badge variant="warning">No</Badge>
+              {data?.Status == "DENIED" ? (
+                <Badge variant="danger">Denied</Badge>
               ) : (
-                <Badge variant="secondary">Yes</Badge>
+                <Badge variant="secondary">{data?.Status}</Badge>
               )}
-
-              {/* {dataSet?.data?.IsVerified} */}
             </td>
+            <td>{formatDate( data?.ValidFrom)}</td>
+            <td>{formatDate( data?.ValidTo)}</td>
             <td>
               <Poper data={data} refresh={dorefresh}></Poper>
             </td>
@@ -233,8 +229,6 @@ export function Users(props) {
       <br></br>
       <br></br>
 
-      {/* <tbody>{items}</tbody>  GNDivision: "1"
-DSDivision*/}
       {dataSet?.data == null ? (
         <Container style={{ alignItems: "center" }}>
           <h1>
@@ -246,12 +240,15 @@ DSDivision*/}
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>DSDivision</th>
-              <th>Gender</th>
-              <th>IsVerified</th>
-              <th>Actions</th>
+              <th>For</th>
+              <th>By</th>
+              <th>Reason</th>
+              <th>WhereTo</th>
+              <th>Status</th>
+              <th>Date Start</th>
+              <th>Date Finish</th>
+              <th>Action</th>
+              
             </tr>
           </thead>
           {items}

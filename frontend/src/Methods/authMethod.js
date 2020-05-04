@@ -44,10 +44,13 @@ export async  function loginRequest(nic,pw,setloginStates,setUserData,setFailedM
           // Do somthing
             console.log(result)
             if(result.data.PasswordHash != null){
+              localStorage.setItem("AID",result.data?.AID)
+              
                 localStorage.setItem('token', result.data);
                 console.log('login succeed',result.data)
                 setUserData(result.data)
                 setloginStates(true)
+                
             }else{
               console.log(localStorage.getItem('token'));
                 console.log('login Error',result.data)
@@ -112,14 +115,14 @@ export async function authRequest(url='',requestBody={},setState){
     }
   }
   const qs = require('querystring');
-  axios.post(getIp()+ url, qs.stringify(requestBody), config)
+  await axios.post(getIp()+ url, qs.stringify(requestBody), config)
       .then((result) => {
           setState(result);
-          console.log(result)
+          console.log(requestBody)
       
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err,"***")
         setState(err);
         //setloginStates(false);
       })
