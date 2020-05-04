@@ -118,7 +118,7 @@ export async function authRequest(url='',requestBody={},setState){
   await axios.post(getIp()+ url, qs.stringify(requestBody), config)
       .then((result) => {
           setState(result);
-          console.log(requestBody)
+          console.log('result-->',result)
       
       })
       .catch((err) => {
