@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { SureModel } from "../Screens/PopupMsg";
 import { SignUp } from "./SignUp";
 import { Users } from "./DataGrid";
+import {Alerts} from "./AlertGrid"
 import {CurfewPasses } from "./CurfewPasses";
 
 import {
@@ -83,6 +84,7 @@ export function WebApp(props) {
                     Home
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link
                     className={
@@ -93,6 +95,7 @@ export function WebApp(props) {
                     Sign Up
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link
                     className={
@@ -147,7 +150,7 @@ export function WebApp(props) {
               <CurfewPasses setNavTitle={setNavTitle} />
             </Route>
             <Route path="/">
-              <Home setNavTitle={setNavTitle} />
+              <Alerts setNavTitle={setNavTitle} />
             </Route>
           </Switch>
         </div>

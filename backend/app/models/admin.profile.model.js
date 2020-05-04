@@ -38,7 +38,7 @@ AdminProfile.register = (newAdmin, result) => {
   };
   
   AdminProfile.login = (aid, result) => {
-    sql.query("SELECT * FROM AdminLogin WHERE AID=?", aid, (err, res) => {
+    sql.query("SELECT * FROM AdminLogin JOIN Admin USING(AID) WHERE AID=?", aid, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
