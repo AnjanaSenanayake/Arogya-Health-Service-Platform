@@ -103,4 +103,7 @@ module.exports = app => {
 
   app.route('/getAllPassRequestsByGNID')
     .post(Admin.getAllPassRequestsByGNID);
+
+  app.route('/epidemicAlertApproveDeny')
+    .post(Admin.epidemicAlertApproveDeny);
 };

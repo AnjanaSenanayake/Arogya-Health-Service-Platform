@@ -1,6 +1,7 @@
 const User = require("../models/user.model.js");
 const Admin = require("../models/admin.model.js");
 const Epidemics = require("../models/epidemics.model.js");
+const EpidemicAlerts = require("../models/epidemic.alerts.model.js");
 const Districts = require("../models/districts.model.js");
 const DivisionalSectretariats = require("../models/ds.model.js");
 const GNDivisions = require("../models/gn.model.js");
@@ -188,9 +189,6 @@ exports.getAllPassRequests = (req, res) => {
     }
     else {
       res.send(result);
-      listnerPayload = {
-        'status': req.body.status
-      };
       return;
     }
   });
@@ -205,9 +203,6 @@ exports.getAllPassRequestsByDSID = (req, res) => {
     }
     else {
       res.send(result);
-      listnerPayload = {
-        'status': req.body.status
-      };
       return;
     }
   });
@@ -222,9 +217,20 @@ exports.getAllPassRequestsByGNID = (req, res) => {
     }
     else {
       res.send(result);
-      listnerPayload = {
-        'status': req.body.status
-      };
+      return;
+    }
+  });
+}
+
+// Epidemic alert approve deny
+exports.epidemicAlertApproveDeny = (req, res) => {
+  EpidemicAlerts.epidemicAlertApproveDeny(req.body, (err, result) => {
+    if (err) {
+      res.status(500).send({ message: err.message || "Some error occurred while epidemic alert approve deny" });
+      return;
+    }
+    else {
+      res.send(result);
       return;
     }
   });

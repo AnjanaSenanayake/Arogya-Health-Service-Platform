@@ -1,3 +1,5 @@
+var crypto = require('crypto');
+
 //Password util
 var genRandomString = function (length) {
     return crypto.randomBytes(Math.ceil(length / 2))
@@ -26,7 +28,15 @@ function checkHashPassword(userPassword, salt) {
     return passwordData;
 }
 
+function getMD5Hash(password) {
+    var hash = crypto.createHash('md5', password);
+    hash.update(password);
+    var value = hash.digest('hex');
+    return value;
+};
+
 module.exports = {
     saltHashPassword,
-    checkHashPassword
+    checkHashPassword,
+    getMD5Hash
 };
