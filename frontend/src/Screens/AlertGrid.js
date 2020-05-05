@@ -38,7 +38,7 @@ export function Alerts(props) {
   const [refresh, dorefresh] = React.useState();
   const [dataSet, setDataSet] = React.useState();
   const [dataSetPending, setDataSetPending] = React.useState();
-
+  const [dataSetEpidemic, setDataSetEpidemic] = React.useState();
   const [items, setItems] = React.useState();
   const [itemsPending, setItemsPending] = React.useState();
 
@@ -48,16 +48,19 @@ export function Alerts(props) {
 
   props.setNavTitle("Curfew Pass");
 
-  function handleDenie(ID, val) {
+  async function handleDenie(ID, val,epidemic) {
+    const UID = await localStorage.getItem('AID')
+    console.log({ alertID: ID, isVerified: val,UID:UID,epidemic:epidemic })
     authRequest(
       "epidemicAlertApproveDeny",
-      { alertID: ID, isVerified: val },
+      { alertID: ID, isVerified: val, UID:UID,epidemic:epidemic },
       dorefresh
     );
   }
 
   useEffect(() => {
     document.title = "Admin-" + props.navTitle;
+    authRequest("getAllEpidemics", {}, setDataSetEpidemic);
     authRequest("getEpidemicAlertsApproved", {}, setDataSet);
     authRequest("getEpidemicAlertsPending", {}, setDataSetPending);
   }, [refresh]);
@@ -66,7 +69,7 @@ export function Alerts(props) {
   useEffect(() => {
     console.log("item set", dorefresh);
 
-    // console.log(dataSet?.data.res);
+    console.log("Epidemics", dataSetEpidemic?.data);
 
     let tableRows = null;
     let pendingTableRows = null;
@@ -74,11 +77,10 @@ export function Alerts(props) {
     if (dataSet?.data) {
       tableRows = dataSet?.data?.res.map((data, index) => {
         return (
-
           <tr key={data.Name}>
             <th>#</th>
             <td>{data?.EpidemicAlertID}</td>
-            <td>{data?.EpidemicID}</td>
+            <td>{dataSetEpidemic?.data[ data?.EpidemicID-1]?.EpidemicName}</td>
             <td>{data?.Name}</td>
             <td>{formatDate(data?.AlertDate)}</td>
             <td>
@@ -94,7 +96,7 @@ export function Alerts(props) {
                 variant="danger"
                 size="sm"
                 onClick={() => {
-                  handleDenie(data.EpidemicID, 1);
+                  handleDenie(data.EpidemicAlertID, 0,dataSetEpidemic?.data[ data?.EpidemicID-1]?.EpidemicName);
                 }}
               >
                 DENIE
@@ -111,7 +113,7 @@ export function Alerts(props) {
           <tr key={data.Name}>
             <th>#</th>
             <td>{data?.EpidemicAlertID}</td>
-            <td>{data?.EpidemicID}</td>
+            <td>{dataSetEpidemic?.data[data?.EpidemicID-1]?.EpidemicName}</td>
             <td>{data?.Name}</td>
             <td>{formatDate(data?.AlertDate)}</td>
             <td>
@@ -127,7 +129,7 @@ export function Alerts(props) {
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  handleDenie(data.EpidemicID, 1);
+                  handleDenie(data.EpidemicAlertID, 1,dataSetEpidemic?.data[ data?.EpidemicID-1]?.EpidemicName);
                 }}
               >
                 APPROVE
@@ -147,7 +149,7 @@ export function Alerts(props) {
     <div>
       <br></br>
       <br></br>
-<h1 className="mt-4">Epidemic Alerts</h1>
+      <h1 className="mt-4">Epidemic Alerts</h1>
       {dataSet?.data == null ? (
         <Container style={{ alignItems: "center" }}>
           <h1>
@@ -168,6 +170,7 @@ export function Alerts(props) {
             </tr>
           </thead>
           {items}
+          {itemsPending}
         </Table>
       )}
     </div>
