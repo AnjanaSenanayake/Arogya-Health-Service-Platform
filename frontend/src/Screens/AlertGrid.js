@@ -50,7 +50,7 @@ export function Alerts(props) {
 
   function handleDenie(ID, val) {
     authRequest(
-      "getEpidemicAlertsApproved",
+      "epidemicAlertApproveDeny",
       { alertID: ID, isVerified: val },
       dorefresh
     );
