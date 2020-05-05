@@ -118,11 +118,12 @@ export async function authRequest(url='',requestBody={},setState){
   await axios.post(getIp()+ url, qs.stringify(requestBody), config)
       .then((result) => {
           setState(result);
-          console.log('result-->',result)
-      
+
+          console.log('result-->',result);
+
       })
       .catch((err) => {
-        console.log(err,"***")
+        console.log(err,"***");
         setState(err);
         //setloginStates(false);
       })

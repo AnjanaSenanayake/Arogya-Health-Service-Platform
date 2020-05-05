@@ -232,7 +232,7 @@ export function Users(props) {
     <div>
       <br></br>
       <br></br>
-
+      <h1 className="mt-4">Verify new users</h1>
       {/* <tbody>{items}</tbody>  GNDivision: "1"
 DSDivision*/}
       {dataSet?.data == null ? (

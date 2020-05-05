@@ -21,23 +21,84 @@ import {
 } from "react-bootstrap";
 import { SureModel } from "./PopupMsg";
 
+function formatDate(date) {
+  var d = new Date(date),
+    month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("-");
+}
+
+function getCurrentDate() {
+  var tempDate = new Date();
+  var date =
+    tempDate.getFullYear() +
+    "-" +
+    (tempDate.getMonth() + 1) +
+    "-" +
+    tempDate.getDate() +
+    " " +
+    tempDate.getHours() +
+    ":" +
+    tempDate.getMinutes() +
+    ":" +
+    tempDate.getSeconds();
+
+  return date;
+}
+
 function Poper(props) {
   const [show, setShow] = React.useState(false);
   const [popupSure, setPopupSure] = React.useState(false);
   const [popupVerify, setPopupVerify] = React.useState(false);
-  const handleClose = () => setShow(false);
+  const [approveDeny, setApproveDeny] = React.useState();
+
   const handleShow = () => setShow(true);
+  props.refresh(false);
+  function handleClose() {
+    props.refresh(true);
+    setShow(false);
+  }
+  function handleApprove() {
+    const currDate = getCurrentDate();
+    authRequest(
+      "requestedPassApproveDeny",
+      {
+        requestID: props.data?.RequestID,
+        status: "APPROVED",
+        AID: localStorage.getItem("AID"),
+        date: currDate,
+      },
+      setApproveDeny
+    );
+    props.refresh(true);
+  }
 
-  function handleVerify() {}
-
-  function handleDelete() {}
+  function handleDecline() {
+    const currDate = getCurrentDate();
+    authRequest(
+      "requestedPassApproveDeny",
+      {
+        requestID: props.data?.RequestID,
+        status: "DENIED",
+        AID: localStorage.getItem("AID"),
+        date: currDate,
+      },
+      setApproveDeny
+    );
+    props.refresh(true);
+  }
 
   return (
     <>
       <SureModel
-        yes={handleDelete}
+        yes={handleDecline}
         title={"Are You Sure?"}
-        okName={"Decline"}
+        okName={"Deny"}
         body={
           "You are going to Decline the curfew pass request for " +
           props.data?.Reason
@@ -46,9 +107,9 @@ function Poper(props) {
         setShow={setPopupSure}
       />
       <SureModel
-        yes={handleVerify}
+        yes={handleApprove}
         title={"Are You Sure?"}
-        okName={"Verify"}
+        okName={"Approve"}
         body={
           "You are going to accept the curfew pass request for " +
           props.data?.Reason
@@ -82,7 +143,9 @@ function Poper(props) {
                 <Badge variant="warning">{props.data?.Status}</Badge>
               ) : props.data?.Status === "DENIED" ? (
                 <Badge variant="danger">{props.data?.Status}</Badge>
-              ) : (<Badge variant="success">{props.data?.Status}</Badge>)}
+              ) : (
+                <Badge variant="success">{props.data?.Status}</Badge>
+              )}
               <br />
               Requested for (Name): {props.data?.RequestedForName}
               <br />
@@ -101,12 +164,12 @@ function Poper(props) {
             <Card.Footer>
               <Button
                 style={{ margin: 10 }}
-                variant="warning"
+                variant="success"
                 onClick={() => {
                   setPopupVerify(true);
                 }}
               >
-                Accept
+                Approve
               </Button>
 
               <Button
@@ -115,7 +178,7 @@ function Poper(props) {
                   setPopupSure(true);
                 }}
               >
-                Decline
+                Deny
               </Button>
             </Card.Footer>
           </Card>
@@ -135,12 +198,44 @@ export function CurfewPasses(props) {
   const [refresh, dorefresh] = React.useState();
   const [dataSet, setDataSet] = React.useState();
   const [items, setItems] = React.useState();
+  const [districtSet, setDistrictSet] = React.useState();
+  const [districtid, setDistrictId] = React.useState();
+  const [dsdata, setDsData] = React.useState();
+  const [gndata, setGnData] = React.useState();
+  const [ds, setDs] = React.useState();
+  const [gs, setGs] = React.useState();
 
   useEffect(() => {
     document.title = "Admin-" + props.navTitle;
     console.log(props);
+    console.log("Refreshing")
     authRequest("getAllPassRequests", {}, setDataSet);
+    authRequest("getAllDistricts", {}, setDistrictSet);
   }, [refresh]);
+
+  useEffect(() => {
+    console.log(districtSet?.data);
+    //authRequest("getDSByDistrict", { DistrictID: 1 }, setDsData);
+  }, [districtSet]);
+
+
+  function handleDistrict(e) {
+    setDistrictId(e.target.value);
+    console.log(districtid);
+    authRequest("getDSByDistrict", { DistrictID: e.target.value }, setDsData);
+    console.log(dsdata);
+  }
+
+  function handleDs(e) {
+    setDs(e.target.value);
+    authRequest("getGNByDivision", { DSID: e.target.value }, setGnData);
+    authRequest("getAllPassRequestsByDSID", {DSID: e.target.value}, setDataSet);
+  }
+
+  function handleGs(e) {
+    setGs(e.target.value);
+    authRequest("getAllPassRequestsByGNID", {GNID: e.target.value}, setDataSet);
+  }
 
   useEffect(() => {
     console.log(dataSet?.data);
@@ -162,11 +257,14 @@ export function CurfewPasses(props) {
                 <Badge variant="warning">{data?.Status}</Badge>
               ) : data?.Status === "DENIED" ? (
                 <Badge variant="danger">{data?.Status}</Badge>
-              ) : (<Badge variant="success">{data?.Status}</Badge>)}
-              
+              ) : (
+                <Badge variant="success">{data?.Status}</Badge>
+              )}
             </td>
+            <td>{formatDate(data?.ValidFrom)}</td>
+            <td>{formatDate(data?.ValidTo)}</td>
             <td>
-              <Poper data={data}></Poper>
+              <Poper data={data} refresh={dorefresh}></Poper>
             </td>
           </tr>
         );
@@ -180,9 +278,63 @@ export function CurfewPasses(props) {
     <div>
       <br></br>
       <br></br>
-
+      <h1 className="mt-4">Curfew Pass Requests</h1>
       {/* <tbody>{items}</tbody>  GNDivision: "1"
 DSDivision*/}
+        <Row>
+          <Col></Col>
+          <Col xs={3}>
+          {" "}
+            <label>District</label>
+            <select
+              className="form-control"
+              value={districtid}
+
+              onChange={handleDistrict}
+            >
+              <option value="0">Select District</option>
+              {districtSet?.data.map((team) => (
+                <option key={team.DistrictID} value={team.DistrictID}>
+                  {team.DistrictName}
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col xs={3}>
+          {" "}
+            <label>DS Division</label>
+            <select
+              className="form-control"
+              onChange={handleDs}
+              value={ds}
+            >
+              <option value="0">Select DS Division</option>
+              {dsdata?.data.map((team) => (
+                <option key={team.DSID} value={team.DSID}>
+                  {team.DivisionalSecretariatName}
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col xs={3}>
+          {" "}
+            <label>GS Division</label>
+            <select
+              className="form-control"
+              onChange={handleGs}
+              value={gs}
+            >
+              <option value="0">Select GN Division</option>
+              {gndata?.data.map((team) => (
+                <option key={team.GNID} value={team.GNID}>
+                  {team.GNDivisionName}
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col></Col>
+        </Row>
+        <br></br>
       {dataSet?.data == null ? (
         <Container style={{ alignItems: "center" }}>
           <h1>
@@ -199,6 +351,8 @@ DSDivision*/}
               <th>To Where</th>
               <th>Reason</th>
               <th>Status</th>
+              <th>Date Start</th>
+              <th>Date Finish</th>
               <th>Actions</th>
             </tr>
           </thead>
