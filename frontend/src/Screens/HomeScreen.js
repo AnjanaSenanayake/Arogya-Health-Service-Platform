@@ -7,8 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { SureModel } from "../Screens/PopupMsg";
 import { SignUp } from "./SignUp";
 import { Users } from "./DataGrid";
-import {Alerts} from "./AlertGrid"
-import {CurfewPasses } from "./CurfewPasses";
+import { Alerts } from "./AlertGrid";
+import { CurfewPasses } from "./CurfewPasses";
 
 import {
   Button,
@@ -18,6 +18,7 @@ import {
   Form,
   Input,
   Modal,
+  Card,
 } from "react-bootstrap";
 export function WebApp(props) {
   const [navTitle, setNavTitle] = React.useState();
@@ -61,27 +62,28 @@ export function WebApp(props) {
               <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
                   <Link
-                    className={navTitle == "User" ? "nav-link h5" : "nav-link"}
-                    to="/users"
+                    className={navTitle == "About" ? "nav-link h5" : "nav-link"}
+                    to="/about"
                   >
-                    Users
+                    Home
                   </Link>
                 </li>
 
                 <li className="nav-item">
                   <Link
-                    className={navTitle == "About" ? "nav-link h5" : "nav-link"}
-                    to="/about"
+                    className={navTitle == "User" ? "nav-link h5" : "nav-link"}
+                    to="/users"
                   >
-                    About
+                    Verify new users
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link
                     className={navTitle == "Home" ? "nav-link h5" : "nav-link"}
                     to="/"
                   >
-                    Home
+                    Epidemic Alerts
                   </Link>
                 </li>
 
@@ -92,7 +94,7 @@ export function WebApp(props) {
                     }
                     to="/signup"
                   >
-                    Sign Up
+                    Register new Officers
                   </Link>
                 </li>
 
@@ -175,21 +177,62 @@ function Home(props) {
   );
 }
 
-
 function About(props) {
   props.setNavTitle("About");
   return (
     <div>
       <div className="container">
-        <h1 className="mt-4">About Screen</h1>
-        <p>
-          The logo in the navbar is now a default Bootstrap feature in Bootstrap
-          4! Make sure to set the width and height of the logo within the HTML
-          or with CSS. For best results, use an SVG image as your logo.
-        </p>
+        <br />
+        <br />
+        <h1 className="mt-4">Home</h1>
+        <Row>
+        <Card style={{ width: "18rem" }}>
+          <Card.Body>
+            <Card.Title>New Users</Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">
+            Updated 1 minutes ago
+            </Card.Subtitle>
+            <Card.Text>
+              Total Users : 4
+              </Card.Text>
+              <Card.Text>
+              Verified : 2
+              </Card.Text>
+              <Card.Text>
+              Pending : 2
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        <Card style={{ width: "18rem" }}>
+          <Card.Body>
+            <Card.Title>Epidemic Alerts</Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">
+              Updated 1 minutes ago
+            </Card.Subtitle>
+            <Card.Text>
+              Total Alerts : 1
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        <Card style={{ width: "18rem" }}>
+          <Card.Body>
+            <Card.Title>Curfew pass Requests</Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">
+            Updated 1 minutes ago
+            </Card.Subtitle>
+            <Card.Text>
+              Total requests : 4
+              </Card.Text>
+              <Card.Text>
+              Approved : 2
+              </Card.Text>
+              <Card.Text>
+              Denied : 2
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        </Row>
       </div>
     </div>
   );
 }
-
-

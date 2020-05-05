@@ -74,6 +74,7 @@ export function Alerts(props) {
     if (dataSet?.data) {
       tableRows = dataSet?.data?.res.map((data, index) => {
         return (
+
           <tr key={data.Name}>
             <th>#</th>
             <td>{data?.EpidemicAlertID}</td>
@@ -146,7 +147,7 @@ export function Alerts(props) {
     <div>
       <br></br>
       <br></br>
-
+<h1 className="mt-4">Epidemic Alerts</h1>
       {dataSet?.data == null ? (
         <Container style={{ alignItems: "center" }}>
           <h1>

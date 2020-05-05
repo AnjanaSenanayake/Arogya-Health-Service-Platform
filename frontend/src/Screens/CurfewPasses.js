@@ -278,7 +278,7 @@ export function CurfewPasses(props) {
     <div>
       <br></br>
       <br></br>
-
+      <h1 className="mt-4">Curfew Pass Requests</h1>
       {/* <tbody>{items}</tbody>  GNDivision: "1"
 DSDivision*/}
         <Row>

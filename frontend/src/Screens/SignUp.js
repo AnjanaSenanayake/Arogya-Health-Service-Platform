@@ -135,6 +135,8 @@ export function SignUp(props) {
   return (
     <div>
       <div className="container">
+        <br/>
+        <br/>
         <h1 className="mt-4">Register new account</h1>
         <Row>
           <Col></Col>
