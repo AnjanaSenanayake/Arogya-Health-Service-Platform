@@ -34,8 +34,14 @@ function Poper(props) {
   const handleShow = () => setShow(true);
 
   async function handleVerify() {
-    await authRequest("verifyUser",{uid:props.data.UID},setRequestResult)
-    console.log(requestResult,'--Result')
+    console.log(props.data)
+    if(props.data.IsVerified == 0){
+      await authRequest("verifyUser",{uid:props.data.UID , isVerified:1},setRequestResult)
+    }
+    else{
+      await authRequest("verifyUser",{uid:props.data.UID , isVerified:0},setRequestResult)
+    }
+    console.log(requestResult,'--Result--verify')
     handleClose();
   }
 
@@ -124,7 +130,7 @@ function Poper(props) {
               {props.data?.IsVerified == 0 ? (
                 <Button
                   style={{ margin: 10 }}
-                  variant="warning"
+                  variant="secondary"
                   onClick={() => {
                     setPopupVerify(true);
                   }}
@@ -133,9 +139,11 @@ function Poper(props) {
                 </Button>
               ) : (
                 <Button
-                  variant="danger"
+                  style={{ margin: 10 }}
+                  variant="warning"
                   onClick={() => {
-                    handleVerify(props.data);
+                    setPopupVerify(true);
+                    // handleVerify(props.data);
                   }}
                 >
                   Un Verify
@@ -146,7 +154,7 @@ function Poper(props) {
                 variant="danger"
                 onClick={() => {
                   setPopupSure(true);
-                  handleDelete(props.data);
+                  // handleDelete(props.data);
                 }}
               >
                 Delete

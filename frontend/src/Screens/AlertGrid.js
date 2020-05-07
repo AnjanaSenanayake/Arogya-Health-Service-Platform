@@ -68,8 +68,8 @@ export function Alerts(props) {
   var itemsObj = [];
   useEffect(() => {
     console.log("item set", dorefresh);
-
     console.log("Epidemics", dataSetEpidemic?.data);
+    console.log("pending", dataSetPending?.data);
 
     let tableRows = null;
     let pendingTableRows = null;
@@ -126,6 +126,7 @@ export function Alerts(props) {
             <td>{data?.NICPP}</td>
             <td>
               <Button
+              style={{ margin: 10 }}
                 variant="secondary"
                 size="sm"
                 onClick={() => {
@@ -134,6 +135,17 @@ export function Alerts(props) {
               >
                 APPROVE
               </Button>
+
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  handleDenie(data.EpidemicAlertID, 0,dataSetEpidemic?.data[ data?.EpidemicID-1]?.EpidemicName);
+                }}
+              >
+                DENIE
+              </Button>
+
             </td>
           </tr>
         );
@@ -143,7 +155,7 @@ export function Alerts(props) {
     // console.log(dataSet)
     setItems(tableRows);
     setItemsPending(pendingTableRows);
-  }, [dataSet]);
+  }, [dataSet,dataSetPending]);
 
   return (
     <div>
