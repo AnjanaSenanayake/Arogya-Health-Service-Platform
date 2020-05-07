@@ -37,7 +37,7 @@ EpidemicAlerts.createEpidemicAlert = (newAlert, result) => {
 };
 
 EpidemicAlerts.getEpidemicAlertsPending = (result) => {
-  sql.query("SELECT EA.*,User.Name,User.NICPP FROM EpidemicAlert AS EA JOIN Epidemics USING(EpidemicID) JOIN User USING(UID) WHERE EA.IsVerified=0", (err, res) => {
+  sql.query("SELECT EA.*,Epidemics.*,User.Name,User.NICPP FROM EpidemicAlert AS EA JOIN Epidemics USING(EpidemicID) JOIN User USING(UID) WHERE EA.IsVerified=0", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -49,7 +49,7 @@ EpidemicAlerts.getEpidemicAlertsPending = (result) => {
 };
 
 EpidemicAlerts.getEpidemicAlertsApproved = (result) => {
-  sql.query("SELECT  EA.*,User.Name,User.NICPP FROM EpidemicAlert AS EA JOIN Epidemics USING(EpidemicID) JOIN User USING(UID) WHERE EA.IsVerified=1", (err, res) => {
+  sql.query("SELECT  EA.*,Epidemics.*,User.Name,User.NICPP FROM EpidemicAlert AS EA JOIN Epidemics USING(EpidemicID) JOIN User USING(UID) WHERE EA.IsVerified=1", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
