@@ -135,6 +135,17 @@ export function Alerts(props) {
               >
                 APPROVE
               </Button>
+
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  handleDenie(data.EpidemicAlertID, 0,dataSetEpidemic?.data[ data?.EpidemicID-1]?.EpidemicName);
+                }}
+              >
+                DENIE
+              </Button>
+              
             </td>
           </tr>
         );
