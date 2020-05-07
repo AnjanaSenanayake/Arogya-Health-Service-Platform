@@ -70,6 +70,7 @@ export function Alerts(props) {
     console.log("item set", dorefresh);
 
     console.log("Epidemics", dataSetEpidemic?.data);
+    console.log("pending", dataSetPending?.data);
 
     let tableRows = null;
     let pendingTableRows = null;
@@ -143,7 +144,7 @@ export function Alerts(props) {
     // console.log(dataSet)
     setItems(tableRows);
     setItemsPending(pendingTableRows);
-  }, [dataSet]);
+  }, [dataSet,dataSetPending]);
 
   return (
     <div>
