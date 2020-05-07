@@ -68,7 +68,6 @@ export function Alerts(props) {
   var itemsObj = [];
   useEffect(() => {
     console.log("item set", dorefresh);
-
     console.log("Epidemics", dataSetEpidemic?.data);
     console.log("pending", dataSetPending?.data);
 
@@ -127,6 +126,7 @@ export function Alerts(props) {
             <td>{data?.NICPP}</td>
             <td>
               <Button
+              style={{ margin: 10 }}
                 variant="secondary"
                 size="sm"
                 onClick={() => {
@@ -145,7 +145,7 @@ export function Alerts(props) {
               >
                 DENIE
               </Button>
-              
+
             </td>
           </tr>
         );
